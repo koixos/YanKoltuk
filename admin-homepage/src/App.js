@@ -18,8 +18,10 @@ function App() {
         <Routes>
           <Route path='/' exact element={<Home/>}/>
           <Route path='/add-service' element={<AddService/>}/>
-          <Route path='/view-services' element={<ViewServices/>}/>
-          <Route path='/service-logs' element={<ViewServiceLogs/>}/>
+          <Route path='/view-services' element={<ViewServices/>}>
+            <Route path=":serviceId" element={<ViewServices />} />
+          </Route>
+          <Route path='/service-logs' exact element={<ViewServiceLogs/>}/>
           <Route path='/not-found' element={<NotFound/>}/>
 
           <Route path='*' element={<Navigate replace to='/not-found'/>}/>

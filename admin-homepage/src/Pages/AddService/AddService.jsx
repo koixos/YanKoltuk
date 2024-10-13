@@ -22,7 +22,7 @@ const AddService = () => {
 
         setTimeout(() => {
             navigate('/');
-        }, 1500);  // 2-second delay to allow Toastify to display
+        }, 1800);  // delay to allow Toastify to display
     };
 
     return (
