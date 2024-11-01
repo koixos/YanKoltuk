@@ -130,6 +130,36 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
+input[type="text"] {
+    width: auto;
+    padding: 5px 10px;
+    margin: 3px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]:hover {
+    border-color: #888;
+}
+
+input[type="text"]:focus {
+    border-color: #5a67d8; 
+    outline: none;
+    box-shadow: 0 0 8px rgba(90, 103, 216, 0.6);
+}
+
+button.delete-btn {
+    background-color: #e53e3e;
+}
+
+button.delete-btn:hover {
+    background-color: #c53030;
+}
+
 @media (max-width: 992px) {
     #servicedetail-details, #servicedetail-students {
         width: 100%;
@@ -150,5 +180,18 @@
         bottom: 0;
         right: 0;
         align-self: center;
+    }
+}
+
+@media (max-width: 768px) {
+    input[type="text"], input[type="tel"] {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 16px;
     }
 }

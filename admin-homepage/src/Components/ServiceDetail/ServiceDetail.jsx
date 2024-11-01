@@ -14,6 +14,10 @@ function ServiceDetail({ service, onBack, onEdit }) {
     };
 
     const handleEditToggle = () => {
+		if (isEditing) {
+			onEdit(updatedService);
+		}
+
         setIsEditing((prev) => !prev);
     };
 
@@ -45,7 +49,6 @@ function ServiceDetail({ service, onBack, onEdit }) {
 
     const confirmDelete = (e) => {
         e.preventDefault();
-
         closePopup();
         
         toast.success('Servis başarıyla silindi!', {
@@ -114,17 +117,50 @@ function ServiceDetail({ service, onBack, onEdit }) {
                         </div>
                         <div class="row">
                             <div class="col-sm-3"><h6 class="mb-0">Sürücü Telefon No:</h6></div>
-                            <div class="col-sm-9 text-secondary"> {service.driver.phone} </div>
+                            <div class="col-sm-9 text-secondary"> 
+								{isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        value={updatedService.driver.phone}
+                                        onChange={handleDriverChange}
+                                    />
+                                ) : (
+                                    updatedService.driver.phone
+                                )}
+							</div>
                             <hr />
                         </div>
                         <div class="row">
                             <div class="col-sm-3"><h6 class="mb-0">Hostes:</h6></div>
-                            <div class="col-sm-9 text-secondary"> {service.stewardess.name} </div>
+                            <div class="col-sm-9 text-secondary">
+								{isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={updatedService.stewardess.name}
+                                        onChange={handleStewardessChange}
+                                    />
+                                ) : (
+                                    updatedService.stewardess.name
+                                )}
+							</div>
                             <hr />
                         </div>
                         <div class="row">
                             <div class="col-sm-3"><h6 class="mb-0">Hostes Telefon No:</h6></div>
-                            <div class="col-sm-9 text-secondary"> {service.stewardess.phone} </div>
+                            <div class="col-sm-9 text-secondary">
+								{isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        value={updatedService.stewardess.phone}
+                                        onChange={handleStewardessChange}
+                                    />
+                                ) : (
+                                    updatedService.stewardess.phone
+                                )}
+							</div>
                             <hr />
                         </div>
                         <div class="row">
