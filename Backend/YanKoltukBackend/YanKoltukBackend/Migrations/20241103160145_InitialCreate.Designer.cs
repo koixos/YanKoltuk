@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YanKoltukBackend.Data;
 
@@ -11,9 +12,11 @@ using YanKoltukBackend.Data;
 namespace YanKoltukBackend.Migrations
 {
     [DbContext(typeof(YanKoltukDbContext))]
-    partial class YanKoltukDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241103160145_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Driver", (string)null);
+                    b.ToTable("Drivers");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.ServiceLog", b =>
@@ -81,7 +84,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("ServiceLog", (string)null);
+                    b.ToTable("ServiceLogs");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Stewardess", b =>
@@ -108,7 +111,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stewardess", (string)null);
+                    b.ToTable("Stewardesses");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Student", b =>
@@ -137,7 +140,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Student", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.StudentService", b =>
@@ -174,7 +177,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentService", (string)null);
+                    b.ToTable("StudentServices");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.User", b =>
@@ -203,7 +206,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -212,7 +215,7 @@ namespace YanKoltukBackend.Migrations
                 {
                     b.HasBaseType("YanKoltukBackend.Models.Entities.User");
 
-                    b.ToTable("Admin", (string)null);
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Manager", b =>
@@ -224,7 +227,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Manager", (string)null);
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Parent", b =>
@@ -246,7 +249,7 @@ namespace YanKoltukBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Parent", (string)null);
+                    b.ToTable("Parents", (string)null);
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Service", b =>
@@ -283,7 +286,7 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasIndex("StewardessId");
 
-                    b.ToTable("Service", (string)null);
+                    b.ToTable("Services", (string)null);
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.ServiceLog", b =>

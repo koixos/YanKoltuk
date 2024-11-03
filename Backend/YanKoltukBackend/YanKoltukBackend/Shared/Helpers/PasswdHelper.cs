@@ -1,0 +1,44 @@
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace YanKoltukBackend.Shared.Helpers
+{
+    public static class PasswdHelper
+    {
+        public static string GeneratePasswd(int len = 12)
+        {
+            const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
+            StringBuilder passwd = new();
+            Random random = new();
+
+            for (int i = 0; i < len; i++)
+            {
+                int index = random.Next(validChars.Length);
+                passwd.Append(validChars[index]);
+            }
+
+            return passwd.ToString();
+        }
+        public static string CreateSalt()
+        {
+            var rng = RandomNumberGenerator.Create();
+            var saltBytes = new byte[16];
+            rng.GetBytes(saltBytes);
+            return Convert.ToBase64String(saltBytes);
+        }
+
+        public static string HashPasswd(string passwd, string salt)
+        {
+            using var sha256 = SHA256.Create();
+            var combinedPasswd = Encoding.UTF8.GetBytes(passwd + salt);
+            var hash = sha256.ComputeHash(combinedPasswd);
+            return Convert.ToBase64String(hash);
+        }
+
+        public static bool VerifyPasswd(string _passwd, string _salt, string _hash)
+        {
+            var hashOfEnteredPasswd = HashPasswd(_passwd, _salt);
+            return hashOfEnteredPasswd == _hash;
+        }
+    }
+}
