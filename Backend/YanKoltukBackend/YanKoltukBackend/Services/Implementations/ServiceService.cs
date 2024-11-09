@@ -11,7 +11,7 @@ namespace YanKoltukBackend.Services.Implementations
     {
         private readonly IRepository<Service> _serviceRepo = serviceRepo;
 
-        public async Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto)
+        public async Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto, int managerId)
         {
             try
             {
@@ -19,18 +19,26 @@ namespace YanKoltukBackend.Services.Implementations
                 var salt = PasswdHelper.CreateSalt();
                 var hashedPasswd = PasswdHelper.HashPasswd(passwd, salt);
 
+
                 var service = new Service
                 {
+                    Username = serviceDto.Plate,
+                    PasswordHash = hashedPasswd,
+                    PasswordSalt = salt,
+                    Role = "Service",
                     Plate = serviceDto.Plate,
                     Capacity = serviceDto.Capacity,
                     DepartureLocation = serviceDto.DepartureLocation,
                     DepartureTime = serviceDto.DepartureTime,
-                    DriverId = serviceDto.DriverId,
-                    StewardessId = serviceDto.StewardessId,
-                    Username = serviceDto.Plate,
-                    PasswordHash = hashedPasswd,
-                    PasswordSalt = salt,
-                    Role = "Service"
+                    ManagerId = managerId,
+                    DriverIdNo = serviceDto.DriverIdNo,
+                    DriverName = serviceDto.DriverName,
+                    DriverPhone = serviceDto.DriverPhone,
+                    DriverPhoto = serviceDto.DriverPhoto,
+                    StewardessIdNo = serviceDto.StewardessIdNo,
+                    StewardessName = serviceDto.StewardessName,
+                    StewardessPhone = serviceDto.StewardessPhone,
+                    StewardessPhoto = serviceDto.StewardessPhoto
                 };
 
                 await _serviceRepo.AddAsync(service);

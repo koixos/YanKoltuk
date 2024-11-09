@@ -1,22 +1,15 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Application.Results;
-using YanKoltukBackend.Models.DTOs;
+using YanKoltukBackend.Data;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Shared.Helpers;
 
-namespace YanKoltukBackend.Data
+namespace YanKoltukBackend.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TempController(YanKoltukDbContext context, IConfiguration configuration) : ControllerBase
+    public class TempController(YanKoltukDbContext context) : ControllerBase
     {
-        private readonly IConfiguration _configuration = configuration;
         private readonly YanKoltukDbContext _context = context;
 
         public async Task<ServiceResult<Admin>> CreateAdminAsync()

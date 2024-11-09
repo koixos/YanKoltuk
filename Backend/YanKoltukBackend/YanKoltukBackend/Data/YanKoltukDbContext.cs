@@ -9,8 +9,8 @@ namespace YanKoltukBackend.Data
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Driver> Drivers { get; set; }
-        public DbSet<Stewardess> Stewardesses { get; set; }
+        //public DbSet<Driver> Drivers { get; set; }
+        //public DbSet<Stewardess> Stewardesses { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceLog> ServiceLogs { get; set; }
@@ -22,12 +22,19 @@ namespace YanKoltukBackend.Data
             modelBuilder.Entity<Admin>().ToTable("Admin");
             modelBuilder.Entity<Manager>().ToTable("Manager");
             modelBuilder.Entity<Student>().ToTable("Student");
-            modelBuilder.Entity<Driver>().ToTable("Driver");
-            modelBuilder.Entity<Stewardess>().ToTable("Stewardess");
+            //modelBuilder.Entity<Driver>().ToTable("Driver");
+            //modelBuilder.Entity<Stewardess>().ToTable("Stewardess");
             modelBuilder.Entity<Service>().ToTable("Service");
             modelBuilder.Entity<Parent>().ToTable("Parent");
             modelBuilder.Entity<ServiceLog>().ToTable("ServiceLog");
             modelBuilder.Entity<StudentService>().ToTable("StudentService");
+
+            // Manager-Service Relationships
+            modelBuilder.Entity<Service>()
+                .HasOne(s => s.Manager)
+                .WithMany(m => m.Services)
+                .HasForeignKey(s => s.ManagerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Student-Service Relationships
             modelBuilder.Entity<StudentService>()

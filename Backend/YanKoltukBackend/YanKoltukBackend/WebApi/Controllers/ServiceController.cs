@@ -33,7 +33,15 @@ namespace YanKoltukBackend.WebApi.Controllers
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> AddService([FromBody] ServiceDto serviceDto)
         {
-            var result = await _serviceService.AddServiceAsync(serviceDto);
+            var managerIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (managerIdClaim == null)
+            {
+                return Unauthorized("ManagerId not found in token.");
+            }
+
+            var managerId = int.Parse(managerIdClaim.Value);
+
+            var result = await _serviceService.AddServiceAsync(serviceDto, managerId);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 
@@ -56,8 +64,15 @@ namespace YanKoltukBackend.WebApi.Controllers
                 return NotFound("Service not found.");
             }
 
-            service.DriverId = updatedServiceDto.DriverId;
-            service.StewardessId = updatedServiceDto.StewardessId;
+            service.DriverIdNo = updatedServiceDto.DriverIdNo;
+            service.DriverName = updatedServiceDto.DriverName;
+            service.DriverPhone = updatedServiceDto.DriverPhone;
+            service.DriverPhoto = updatedServiceDto.DriverPhoto;
+
+            service.StewardessIdNo = updatedServiceDto.StewardessIdNo;
+            service.StewardessName = updatedServiceDto.StewardessName;
+            service.StewardessPhone = updatedServiceDto.StewardessPhone;
+            service.StewardessPhoto = updatedServiceDto.StewardessPhoto;
 
             var result = await _serviceService.UpdateServiceAsync(service);
             return result.Success ? NoContent() : BadRequest(result.Message);

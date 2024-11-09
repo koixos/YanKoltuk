@@ -6,7 +6,7 @@ namespace YanKoltukBackend.Services.Interfaces
 {
     public interface IServiceService
     {
-        Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto);
+        Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto, int managerId);
         Task<List<Service>> GetAllServicesAsync();
         Task<Service> GetServiceByIdAsync(int serviceId);
         Task<ServiceResult<Service>> DeleteServiceAsync(int serviceId);
