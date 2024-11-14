@@ -4,9 +4,8 @@ using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Services.Interfaces
 {
-    public interface IUserService
+    public interface IParentService
     {
         Task<ServiceResult<Parent>> CreateParentAsync(ParentSignupDto parentSignupDto);
-        Task<string?> AuthenticateUserAsync(LoginDto loginDto);
     }
 }

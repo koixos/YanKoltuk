@@ -9,8 +9,6 @@ namespace YanKoltukBackend.Data
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Student> Students { get; set; }
-        //public DbSet<Driver> Drivers { get; set; }
-        //public DbSet<Stewardess> Stewardesses { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceLog> ServiceLogs { get; set; }
@@ -22,12 +20,38 @@ namespace YanKoltukBackend.Data
             modelBuilder.Entity<Admin>().ToTable("Admin");
             modelBuilder.Entity<Manager>().ToTable("Manager");
             modelBuilder.Entity<Student>().ToTable("Student");
-            //modelBuilder.Entity<Driver>().ToTable("Driver");
-            //modelBuilder.Entity<Stewardess>().ToTable("Stewardess");
             modelBuilder.Entity<Service>().ToTable("Service");
             modelBuilder.Entity<Parent>().ToTable("Parent");
             modelBuilder.Entity<ServiceLog>().ToTable("ServiceLog");
             modelBuilder.Entity<StudentService>().ToTable("StudentService");
+
+            // User-Admin Relationships
+            modelBuilder.Entity<Admin>()
+                .HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // User-Manager Relationships
+            modelBuilder.Entity<Manager>()
+                .HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // User-Service Relationships
+            modelBuilder.Entity<Service>()
+                .HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // User-Parent Relationships
+            modelBuilder.Entity<Parent>()
+                .HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Manager-Service Relationships
             modelBuilder.Entity<Service>()

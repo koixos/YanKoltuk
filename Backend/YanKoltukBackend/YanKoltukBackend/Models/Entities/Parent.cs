@@ -1,12 +1,27 @@
-﻿namespace YanKoltukBackend.Models.Entities
-{
-    public class Parent : User
-    {
-        public required int IdNo { get; set; }
-        public required string Name { get; set; }
-        public required string Phone { get; set; }
-        public required string Address { get; set; }
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-        public ICollection<Student> Students { get; set; } = new List<Student>();
+namespace YanKoltukBackend.Models.Entities
+{
+    [Index(nameof(IdNo), IsUnique = true)]
+    [Index(nameof(Phone), IsUnique = true)]
+    public class Parent
+    {
+        public int ParentId { get; set; }
+        [Required]
+        public int IdNo { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Phone { get; set; }
+        [Required]
+        public string Address { get; set; }
+
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public User User { get; set; }
+
+        public ICollection<Student> Students { get; set; } = [];
     }
 }

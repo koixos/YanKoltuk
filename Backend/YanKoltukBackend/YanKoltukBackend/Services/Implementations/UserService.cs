@@ -17,7 +17,7 @@ namespace YanKoltukBackend.Services.Implementations
         private readonly YanKoltukDbContext _context = context;
         private readonly IConfiguration _configuration = configuration;
 
-        public async Task<ServiceResult<User>> CreateUserAsync(ParentSignupDto parentSignupDto)
+        public async Task<ServiceResult<Parent>> CreateParentAsync(ParentSignupDto parentSignupDto)
         {
             var salt = PasswdHelper.CreateSalt();
             var hashedPasswd = PasswdHelper.HashPasswd(parentSignupDto.Password, salt);
@@ -33,7 +33,19 @@ namespace YanKoltukBackend.Services.Implementations
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return ServiceResult<User>.SuccessResult(user, "User created");
+            var parent = new Parent
+            {
+                User = user,
+                Name = parentSignupDto.Name,
+                IdNo = parentSignupDto.IdNo,
+                Phone = parentSignupDto.Phone,
+                Address = parentSignupDto.Address
+            };
+
+            _context.Parents.Add(parent);
+            await _context.SaveChangesAsync();
+
+            return ServiceResult<Parent>.SuccessResult(parent, "Parent created");
         }
 
         public async Task<string?> AuthenticateUserAsync(LoginDto loginDto)
@@ -48,7 +60,7 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 new(ClaimTypes.Name, user.Username),
                 new(ClaimTypes.Role, user.Role),
-                new("UserId", user.Id.ToString())
+                new("UserId", user.UserId.ToString())
             };
 
             return GenerateJwtToken(claims);

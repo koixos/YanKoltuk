@@ -1,30 +1,37 @@
-﻿namespace YanKoltukBackend.Models.Entities
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace YanKoltukBackend.Models.Entities
 {
-    public class Service : User
+    [Index(nameof(Plate), IsUnique = true)]
+    public class Service
     {
-        public required string Plate { get; set; }
+        public int ServiceId { get; set; }
+        [Required]
+        public string Plate { get; set; }
         public int Capacity { get; set; }
-        public string DepartureLocation { get; set; }
-        public string DepartureTime { get; set; }
+        public string? DepartureLocation { get; set; }
+        public string? DepartureTime { get; set; }
 
-        /*public int DriverId { get; set; }
-        public Driver Driver { get; set; }
-
-        public int StewardessId { get; set; }
-        public Stewardess Stewardess { get; set; }*/
-
-        public required string DriverIdNo { get; set; }
-        public required string DriverName { get; set; }
-        public required string DriverPhone { get; set; }
+        public string? DriverIdNo { get; set; }
+        public string? DriverName { get; set; }
+        public string? DriverPhone { get; set; }
         public string? DriverPhoto { get; set; }
 
-        public required string StewardessIdNo { get; set; }
-        public required string StewardessName { get; set; }
-        public required string StewardessPhone { get; set; }
+        public string? StewardessIdNo { get; set; }
+        public string? StewardessName { get; set; }
+        public string? StewardessPhone { get; set; }
         public string? StewardessPhoto { get; set; }
 
-        public required int ManagerId { get; set; }
-        public Manager Manager { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public User User { get; set; }
+
+        [Required]
+        [ForeignKey("Manager")]
+        public int ManagerId { get; set; }
+        public Manager? Manager { get; set; }
 
         public ICollection<StudentService> StudentServices { get; set; } = [];
         public ICollection<ServiceLog> ServiceLogs { get; set; } = [];
