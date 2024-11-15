@@ -6,7 +6,6 @@ namespace YanKoltukBackend.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ServiceResult<Parent>> CreateParentAsync(ParentSignupDto parentSignupDto);
         Task<string?> AuthenticateUserAsync(LoginDto loginDto);
     }
 }

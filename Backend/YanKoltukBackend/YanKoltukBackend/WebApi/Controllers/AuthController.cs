@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Models.DTOs;
 using YanKoltukBackend.Services.Interfaces;
 
@@ -7,14 +6,27 @@ namespace YanKoltukBackend.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IUserService userService) : ControllerBase
+    public class AuthController(IUserService userService, IAdminService adminService, IParentService parentService) : ControllerBase
     {
         private readonly IUserService _userService = userService;
+        private readonly IAdminService _adminService = adminService;
+        private readonly IParentService _parentService = parentService;
+
+        [HttpGet("admin")]
+        public async Task<IActionResult> AdminSignup()
+        {
+            var result = await _adminService.CreateAdminAsync();
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result.Data);
+        }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> Signup(ParentSignupDto parentSignupDto)
+        public async Task<IActionResult> ParentSignup(ParentSignupDto parentSignupDto)
         {
-            var result = await _userService.CreateUserAsync(parentSignupDto);
+            var result = await _parentService.CreateParentAsync(parentSignupDto);
             if (!result.Success)
             {
                 return BadRequest(result.Message);

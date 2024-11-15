@@ -2,7 +2,7 @@
 
 namespace YanKoltukBackend.Models.Entities
 {
-    public class Admin
+    public class Admin()
     {
         public int AdminId { get; set; }
 

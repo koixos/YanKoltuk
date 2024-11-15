@@ -1,31 +1,32 @@
 ﻿using YanKoltukBackend.Application.Results;
+using YanKoltukBackend.Data;
 using YanKoltukBackend.Models.DTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
 using YanKoltukBackend.Services.Interfaces;
+using YanKoltukBackend.Shared;
 using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Services.Implementations
 {
-    public class ServiceService(IRepository<Service> serviceRepo) : IServiceService
+    public class ServiceService(YanKoltukDbContext context, IRepository<Service> serviceRepo, UserHelper userHelper) : IServiceService
     {
+        private readonly YanKoltukDbContext _context = context;
         private readonly IRepository<Service> _serviceRepo = serviceRepo;
+        private readonly UserHelper _userHelper = userHelper;
 
         public async Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto, int managerId)
         {
             try
             {
-                var passwd = PasswdHelper.GeneratePasswd();
-                var salt = PasswdHelper.CreateSalt();
-                var hashedPasswd = PasswdHelper.HashPasswd(passwd, salt);
-
+                var passwd = AuthHelper.GeneratePasswd();
+                var user = _userHelper.CreateUser(serviceDto.Plate, passwd, Roles.Service.GetDescription());
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
 
                 var service = new Service
                 {
-                    Username = serviceDto.Plate,
-                    PasswordHash = hashedPasswd,
-                    PasswordSalt = salt,
-                    Role = "Service",
+                    User = user,
                     Plate = serviceDto.Plate,
                     Capacity = serviceDto.Capacity,
                     DepartureLocation = serviceDto.DepartureLocation,
@@ -85,11 +86,6 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 return ServiceResult<Service>.ErrorResult("Error updating service: " + ex.Message);
             }
-        }
-
-        public bool VerifyServiceLogin(string enteredPasswd, Service service)
-        {
-            return PasswdHelper.VerifyPasswd(enteredPasswd, service.PasswordSalt, service.PasswordHash);
         }
     }
 }

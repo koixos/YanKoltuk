@@ -12,6 +12,5 @@ namespace YanKoltukBackend.Services.Interfaces
         Task<ServiceResult<Service>> DeleteServiceAsync(int serviceId);
         Task<ServiceResult<Service>> UpdateServiceAsync(Service service);
         Task<List<ServiceLog>> GetServiceLogsExcelAsync(int serviceId);
-        bool VerifyServiceLogin(string enteredPasswd, Service service);
     }
 }

@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace YanKoltukBackend.Models.Entities
 {
     [Index(nameof(Plate), IsUnique = true)]
+    [Index(nameof(DriverIdNo), IsUnique = true)]
+    [Index(nameof(StewardessIdNo), IsUnique = true)]
     public class Service
     {
         public int ServiceId { get; set; }
