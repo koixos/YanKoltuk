@@ -1,6 +1,6 @@
 ﻿using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Data;
-using YanKoltukBackend.Models.DTOs;
+using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
 using YanKoltukBackend.Services.Interfaces;
@@ -9,22 +9,20 @@ using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Services.Implementations
 {
-    public class AdminService(YanKoltukDbContext context, IRepository<Manager> managerRepo, UserHelper userHelper) : IAdminService
+    public class AdminService(IRepository<User> userRepo, IRepository<Admin> adminRepo, IRepository<Manager> managerRepo, UserHelper userHelper) : IAdminService
     {
-        private readonly YanKoltukDbContext _context = context;
+        private readonly IRepository<User> _userRepo = userRepo;
+        private readonly IRepository<Admin> _adminRepo = adminRepo;
         private readonly IRepository<Manager> _managerRepo = managerRepo;
         private readonly UserHelper _userHelper = userHelper;
 
         public async Task<ServiceResult<Admin>> CreateAdminAsync()
         {
             var user = _userHelper.CreateUser("admin", "admin", Roles.Admin.GetDescription());
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _userRepo.AddAsync(user);
 
             var admin = new Admin { User = user };
-            _context.Admins.Add(admin);
-            await _context.SaveChangesAsync();
-
+            await _adminRepo.AddAsync(admin);
             return ServiceResult<Admin>.SuccessResult(admin, "Admin created w/ username & passwd: admin");
         }
 
@@ -39,12 +37,10 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 var passwd = AuthHelper.GeneratePasswd();
                 var user = _userHelper.CreateUser(managerDto.Username, passwd, Roles.Manager.GetDescription());
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                await _userRepo.AddAsync(user);
 
                 var manager = new Manager { User = user };
                 await _managerRepo.AddAsync(manager);
-
                 return ServiceResult<Manager>.SuccessResult(manager, "Manager added with password:\n\t" + passwd);
             }
             catch (Exception ex)

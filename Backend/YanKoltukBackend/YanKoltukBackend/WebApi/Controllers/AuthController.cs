@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YanKoltukBackend.Models.DTOs;
+using YanKoltukBackend.Models.DTOs.UserDTOs;
 using YanKoltukBackend.Services.Interfaces;
 
 namespace YanKoltukBackend.WebApi.Controllers

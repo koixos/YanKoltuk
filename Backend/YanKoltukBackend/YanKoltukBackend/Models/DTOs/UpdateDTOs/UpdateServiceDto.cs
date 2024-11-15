@@ -1,6 +1,6 @@
-﻿namespace YanKoltukBackend.Models.DTOs
+﻿namespace YanKoltukBackend.Models.DTOs.UpdateDTOs
 {
-    public class UpdatedServiceDto
+    public class UpdateServiceDto
     {
         public string? DriverIdNo { get; set; }
         public string? DriverName { get; set; }

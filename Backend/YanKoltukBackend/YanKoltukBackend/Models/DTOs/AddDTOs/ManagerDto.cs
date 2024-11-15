@@ -1,4 +1,4 @@
-﻿namespace YanKoltukBackend.Models.DTOs
+﻿namespace YanKoltukBackend.Models.DTOs.AddDTOs
 {
     public class ManagerDto
     {

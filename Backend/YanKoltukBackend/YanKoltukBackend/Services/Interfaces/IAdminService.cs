@@ -1,5 +1,5 @@
 ﻿using YanKoltukBackend.Application.Results;
-using YanKoltukBackend.Models.DTOs;
+using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Services.Interfaces

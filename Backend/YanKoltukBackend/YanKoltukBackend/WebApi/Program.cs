@@ -3,30 +3,29 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using YanKoltukBackend.Data;
-using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Implementations;
 using YanKoltukBackend.Repositories.Interfaces;
 using YanKoltukBackend.Services.Implementations;
 using YanKoltukBackend.Services.Interfaces;
+using YanKoltukBackend.Shared.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddScoped<IRepository<Manager>, Repository<Manager>>();
-builder.Services.AddScoped<IRepository<Service>, Repository<Service>>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddScoped<IServiceService, ServiceService>();
-builder.Services.AddScoped<IFileService, FileService>();
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var connStr = builder.Configuration.GetConnectionString("YanKoltukDb");
 
 builder.Services.AddDbContext<YanKoltukDbContext>(options => {
     options.UseSqlServer(connStr);
 });
+
+builder.Services.AddScoped<UserHelper>();
+builder.Services.AddScoped<AuthHelper>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
+builder.Services.AddScoped<IParentService, ParentService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -46,6 +45,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,9 +62,5 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    _ = endpoints.MapControllers();
-});
-
+app.MapControllers();
 app.Run();

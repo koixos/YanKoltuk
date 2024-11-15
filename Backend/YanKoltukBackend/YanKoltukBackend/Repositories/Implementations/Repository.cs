@@ -12,7 +12,7 @@ namespace YanKoltukBackend.Repositories.Implementations
 
         public Repository(YanKoltukDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbSet = _context.Set<T>();
         }
 
@@ -21,32 +21,36 @@ namespace YanKoltukBackend.Repositories.Implementations
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
+            ArgumentNullException.ThrowIfNull(predicate);
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task AddAsync(T entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
-        public Task Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
             _dbSet.Update(entity);
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
-        public Task Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
             _dbSet.Remove(entity);
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace YanKoltukBackend.Models.DTOs
+﻿namespace YanKoltukBackend.Models.DTOs.UserDTOs
 {
     public class LoginDto
     {
