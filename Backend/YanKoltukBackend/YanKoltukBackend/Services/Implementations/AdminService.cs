@@ -31,7 +31,7 @@ namespace YanKoltukBackend.Services.Implementations
             return (await _managerRepo.GetAllAsync()).ToList();
         }
 
-        public async Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto)
+        public async Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto, int adminId)
         {
             try
             {
@@ -41,12 +41,27 @@ namespace YanKoltukBackend.Services.Implementations
 
                 var manager = new Manager { User = user };
                 await _managerRepo.AddAsync(manager);
+
+                var admin = await _adminRepo.GetByIdAsync(adminId);
+                if (admin == null)
+                {
+                    return ServiceResult<Manager>.ErrorResult("Admin not found");
+                }
+
+                admin.Managers.Add(manager);
+                await _adminRepo.UpdateAsync(admin);
+
                 return ServiceResult<Manager>.SuccessResult(manager, "Manager added with password:\n\t" + passwd);
             }
             catch (Exception ex)
             {
                 return ServiceResult<Manager>.ErrorResult("Error: " + ex.Message);
             }
+        }
+
+        public int GetAdminId()
+        {
+            return _userHelper.GetUserId();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 new(ClaimTypes.Name, user.Username),
                 new(ClaimTypes.Role, user.Role),
-                new("UserId", user.UserId.ToString())
+                new(ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 
             return _authHelper.GenerateJwtToken(claims);

@@ -17,12 +17,15 @@ builder.Services.AddDbContext<YanKoltukDbContext>(options => {
     options.UseSqlServer(connStr);
 });
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<UserHelper>();
 builder.Services.AddScoped<AuthHelper>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IParentService, ParentService>();
 builder.Services.AddScoped<IFileService, FileService>();

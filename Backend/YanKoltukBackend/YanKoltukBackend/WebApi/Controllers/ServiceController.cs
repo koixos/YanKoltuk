@@ -3,16 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
 using YanKoltukBackend.Services.Interfaces;
+using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ServiceController(IServiceService serviceService, IFileService fileService) : ControllerBase
+    public class ServiceController(IServiceService serviceService, IFileService fileService, UserHelper userHelper) : ControllerBase
     {
         private readonly IServiceService _serviceService = serviceService;
         private readonly IFileService _fileService = fileService;
+        private readonly UserHelper _userHelper = userHelper;
 
         [HttpGet("services")]
         [Authorize(Roles = "Manager")]
@@ -28,47 +30,6 @@ namespace YanKoltukBackend.WebApi.Controllers
             var service = await _serviceService.GetServiceByIdAsync(id);
             if (service == null) return NotFound();
             return Ok(service);
-        }
-
-        [HttpPost("addService")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> AddService([FromBody] ServiceDto serviceDto)
-        {
-            var managerIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
-
-            if (managerIdClaim == null)
-            {
-                return Unauthorized("ManagerId not found in token.");
-            }
-
-            var managerId = int.Parse(managerIdClaim.Value);
-
-            var result = await _serviceService.AddServiceAsync(serviceDto, managerId);
-
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
-        }
-
-        [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> DeleteService(int id)
-        {
-            var result = await _serviceService.DeleteServiceAsync(id);
-            return result.Success ? NoContent() : BadRequest(result.Message);
-        }
-
-        [HttpPut("update/{id}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> UpdateService(int id, [FromBody] UpdateServiceDto updatedServiceDto)
-        {
-            var service = await _serviceService.GetServiceByIdAsync(id);
-
-            if (service == null)
-            {
-                return NotFound("Service not found.");
-            }
-
-            var result = await _serviceService.UpdateServiceAsync(updatedServiceDto, service);
-            return result.Success ? NoContent() : BadRequest(result.Message);
         }
 
         /*[HttpGet("DownloadLogs")]

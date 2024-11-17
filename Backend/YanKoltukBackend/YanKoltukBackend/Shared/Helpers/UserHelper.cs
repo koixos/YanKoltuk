@@ -1,10 +1,14 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
+using System.Security.Claims;
 using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Shared.Helpers
 {
-    public class UserHelper
+    public class UserHelper(IHttpContextAccessor httpContextAccessor)
     {
+        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+
         public User CreateUser(string username, string passwd, string role)
         {
             var salt = AuthHelper.CreateSalt();
@@ -17,6 +21,12 @@ namespace YanKoltukBackend.Shared.Helpers
                 PasswordSalt = salt,
                 Role = role
             };
+        }
+
+        public int GetUserId()
+        {
+            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            return userId;
         }
     }
 }

@@ -22,8 +22,10 @@ namespace YanKoltukBackend.WebApi.Controllers
         [HttpPost("addManager")]
         public async Task<IActionResult> AddManager([FromBody] ManagerDto managerDto)
         {
-            var result = await _adminService.AddManagerAsync(managerDto);
+            var adminId = _adminService.GetAdminId();
+            var result = await _adminService.AddManagerAsync(managerDto, adminId);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+            
         }
     }
 }

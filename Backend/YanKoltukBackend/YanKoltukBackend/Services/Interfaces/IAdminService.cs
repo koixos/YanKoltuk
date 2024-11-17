@@ -8,6 +8,7 @@ namespace YanKoltukBackend.Services.Interfaces
     {
         Task<ServiceResult<Admin>> CreateAdminAsync();
         Task<List<Manager>> GetAllManagersAsync();
-        Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto);
+        Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto, int adminId);
+        int GetAdminId();
     }
 }

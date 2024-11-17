@@ -9,9 +9,6 @@ namespace YanKoltukBackend.Services.Interfaces
     {
         Task<List<Service>> GetAllServicesAsync();
         Task<Service> GetServiceByIdAsync(int serviceId);
-        Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto, int managerId);
-        Task<ServiceResult<Service>> UpdateServiceAsync(UpdateServiceDto updateServiceDto, Service service);
-        Task<ServiceResult<Service>> DeleteServiceAsync(int serviceId);
         //Task<List<ServiceLog>> GetServiceLogsExcelAsync(int serviceId);
     }
 }
