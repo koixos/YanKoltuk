@@ -108,11 +108,16 @@ namespace YanKoltukBackend.Services.Implementations
         public async Task<ServiceResult<Service>> DeleteServiceAsync(int serviceId)
         {
             var service = await _serviceRepo.GetByIdAsync(serviceId);
+            var user = await _userRepo.GetByIdAsync(service.UserId);
+
             if (service == null)
             {
                 return ServiceResult<Service>.ErrorResult("Service not found");
             }
+
             await _serviceRepo.DeleteAsync(service);
+            await _userRepo.DeleteAsync(user);
+
             return ServiceResult<Service>.SuccessResult(service);
         }
     }
