@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using YanKoltukBackend.Data;
+﻿using System.Security.Claims;
 using YanKoltukBackend.Models.DTOs.UserDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -29,9 +25,9 @@ namespace YanKoltukBackend.Services.Implementations
 
             var claims = new List<Claim>
             {
+                new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new(ClaimTypes.Name, user.Username),
-                new(ClaimTypes.Role, user.Role),
-                new(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                new(ClaimTypes.Role, user.Role)
             };
 
             return _authHelper.GenerateJwtToken(claims);

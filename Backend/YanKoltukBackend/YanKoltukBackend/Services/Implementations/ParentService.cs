@@ -1,5 +1,5 @@
-﻿using YanKoltukBackend.Application.Results;
-using YanKoltukBackend.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Models.DTOs.UserDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -15,7 +15,7 @@ namespace YanKoltukBackend.Services.Implementations
         private readonly IRepository<Parent> _parentRepo = parentRepo;
         private readonly UserHelper _userHelper = userHelper;
 
-        public async Task<ServiceResult<Parent>> CreateParentAsync(ParentSignupDto parentSignupDto)
+        public async Task<ServiceResult<Parent>> CreateParentAsync([FromBody] ParentSignupDto parentSignupDto)
         {
             var user = _userHelper.CreateUser(parentSignupDto.Phone, parentSignupDto.Password, Roles.Parent.GetDescription());
             await _userRepo.AddAsync(user);

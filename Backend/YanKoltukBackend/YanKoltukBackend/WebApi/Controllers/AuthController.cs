@@ -24,7 +24,7 @@ namespace YanKoltukBackend.WebApi.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> ParentSignup(ParentSignupDto parentSignupDto)
+        public async Task<IActionResult> ParentSignup([FromBody] ParentSignupDto parentSignupDto)
         {
             var result = await _parentService.CreateParentAsync(parentSignupDto);
             if (!result.Success)
@@ -35,7 +35,7 @@ namespace YanKoltukBackend.WebApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             var token = await _userService.AuthenticateUserAsync(loginDto);
             if (token == null)

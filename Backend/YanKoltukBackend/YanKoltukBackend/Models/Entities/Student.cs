@@ -19,9 +19,9 @@ namespace YanKoltukBackend.Models.Entities
         [Required]
         [ForeignKey("Parent")]
         public int ParentId { get; set; }
-        public Parent Parent { get; set; }
+        public Parent? Parent { get; set; }
 
-        public ICollection<StudentService> StudentServices { get; set; } = [];
+        public StudentService StudentService { get; set; }
         public ICollection<ServiceLog> ServiceLogs { get; set; } = [];
     }
 }

@@ -50,9 +50,8 @@ namespace YanKoltukBackend.Shared.Helpers
 
         public static string HashPasswd(string passwd, string salt)
         {
-            using var sha256 = SHA256.Create();
             var combinedPasswd = Encoding.UTF8.GetBytes(passwd + salt);
-            var hash = sha256.ComputeHash(combinedPasswd);
+            var hash = SHA256.HashData(combinedPasswd);
             return Convert.ToBase64String(hash);
         }
 

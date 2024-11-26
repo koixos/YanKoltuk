@@ -12,6 +12,13 @@ namespace YanKoltukBackend.WebApi.Controllers
     {
         private readonly IAdminService _adminService = adminService;
 
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAdminId()
+        {
+            var adminId = (await _adminService.GetAdminIdAsync()).Data;
+            return Ok(adminId);
+        }
+
         [HttpGet("managers")]
         public async Task<IActionResult> GetAllManagers()
         {
@@ -22,10 +29,9 @@ namespace YanKoltukBackend.WebApi.Controllers
         [HttpPost("addManager")]
         public async Task<IActionResult> AddManager([FromBody] ManagerDto managerDto)
         {
-            var adminId = _adminService.GetAdminId();
+            var adminId = (await _adminService.GetAdminIdAsync()).Data;
             var result = await _adminService.AddManagerAsync(managerDto, adminId);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
-            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace YanKoltukBackend.Models.Entities
 {
@@ -11,10 +12,12 @@ namespace YanKoltukBackend.Models.Entities
         public int SortIndex { get; set; }
         public string Direction { get; set; }
 
+        [Required]
         [ForeignKey("Service")]
         public int ServiceId { get; set; }
         public Service Service { get; set; }
 
+        [Required]
         [ForeignKey("Student")]
         public int StudentId { get; set; }
         public Student Student { get; set; }

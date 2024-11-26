@@ -14,6 +14,13 @@ namespace YanKoltukBackend.WebApi.Controllers
     {
         private readonly IManagerService _managerService = managerService;
 
+        [HttpGet("manager")]
+        public async Task<IActionResult> GetManagerId()
+        {
+            var managerId = await _managerService.GetManagerIdAsync();
+            return Ok(managerId);
+        }
+
         [HttpGet("services")]
         public async Task<IActionResult> GetAllServices()
         {
@@ -25,7 +32,10 @@ namespace YanKoltukBackend.WebApi.Controllers
         public async Task<IActionResult> GetServiceById(int id)
         {
             var service = await _managerService.GetServiceByIdAsync(id);
-            if (service == null) return NotFound();
+            if (service == null)
+            {
+                return NotFound();
+            }
             return Ok(service);
         }
 
@@ -41,12 +51,10 @@ namespace YanKoltukBackend.WebApi.Controllers
         public async Task<IActionResult> UpdateService([FromBody] UpdateServiceDto updatedServiceDto, int id)
         {
             var service = await _managerService.GetServiceByIdAsync(id);
-
             if (service == null)
             {
                 return NotFound("Service not found.");
             }
-
             var result = await _managerService.UpdateServiceAsync(updatedServiceDto, service);
             return result.Success ? NoContent() : BadRequest(result.Message);
         }

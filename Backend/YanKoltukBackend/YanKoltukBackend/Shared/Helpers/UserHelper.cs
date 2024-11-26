@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Shared.Helpers
@@ -25,7 +23,7 @@ namespace YanKoltukBackend.Shared.Helpers
 
         public int GetUserId()
         {
-            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return userId;
         }
     }

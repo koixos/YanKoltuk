@@ -26,9 +26,10 @@ namespace YanKoltukBackend.Models.Entities
         public string? StewardessPhone { get; set; }
         public string? StewardessPhoto { get; set; }
 
+        [Required]
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [Required]
         [ForeignKey("Manager")]

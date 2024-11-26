@@ -11,7 +11,7 @@ namespace YanKoltukBackend.Shared
                 e.GetType()
                     .GetTypeInfo()
                     .GetMember(e.ToString())
-                    .FirstOrDefault(m => m.MemberType == MemberTypes.Field)
+                    .FirstOrDefault(m => m.MemberType == MemberTypes.Field)?
                     .GetCustomAttributes(typeof(DescriptionAttribute), false)
                     .SingleOrDefault()
                     as DescriptionAttribute;

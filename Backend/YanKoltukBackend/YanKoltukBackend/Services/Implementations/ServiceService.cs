@@ -1,10 +1,6 @@
-﻿using YanKoltukBackend.Application.Results;
-using YanKoltukBackend.Models.DTOs.AddDTOs;
-using YanKoltukBackend.Models.DTOs.UpdateDTOs;
-using YanKoltukBackend.Models.Entities;
+﻿using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
 using YanKoltukBackend.Services.Interfaces;
-using YanKoltukBackend.Shared;
 using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Services.Implementations

@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using YanKoltukBackend.Data;
+using YanKoltukBackend.Models.DTOs.AddDTOs;
+using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
+using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Repositories.Implementations
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly YanKoltukDbContext _context;
+        private readonly YanKoltukDbContext _context;
         private readonly DbSet<T> _dbSet;
 
         public Repository(YanKoltukDbContext context)

@@ -1,5 +1,4 @@
 ﻿using YanKoltukBackend.Application.Results;
-using YanKoltukBackend.Data;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -15,6 +14,18 @@ namespace YanKoltukBackend.Services.Implementations
         private readonly IRepository<Admin> _adminRepo = adminRepo;
         private readonly IRepository<Manager> _managerRepo = managerRepo;
         private readonly UserHelper _userHelper = userHelper;
+
+        public async Task<ServiceResult<int>> GetAdminIdAsync()
+        {
+            var userId = _userHelper.GetUserId();
+            var admins = await _adminRepo.GetAllAsync();
+            var admin = admins.FirstOrDefault(a => a.UserId == userId);
+            if (admin == null)
+            {
+                return ServiceResult<int>.ErrorResult("Admin not found");
+            }
+            return ServiceResult<int>.SuccessResult(admin.AdminId);
+        }
 
         public async Task<ServiceResult<Admin>> CreateAdminAsync()
         {
@@ -57,11 +68,6 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 return ServiceResult<Manager>.ErrorResult("Error: " + ex.Message);
             }
-        }
-
-        public int GetAdminId()
-        {
-            return _userHelper.GetUserId();
         }
     }
 }

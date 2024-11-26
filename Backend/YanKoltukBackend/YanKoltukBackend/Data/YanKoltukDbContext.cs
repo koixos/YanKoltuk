@@ -60,16 +60,17 @@ namespace YanKoltukBackend.Data
                 .HasForeignKey(s => s.ManagerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Student-Service Relationships
-            modelBuilder.Entity<StudentService>()
-                .HasOne(ss => ss.Student)
-                .WithMany(s => s.StudentServices)
-                .HasForeignKey(ss => ss.StudentId)
+            // Student-StudentService Relationship
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.StudentService)
+                .WithOne(ss => ss.Student)
+                .HasForeignKey<StudentService>(ss => ss.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<StudentService>()
-                .HasOne(ss => ss.Service)
-                .WithMany(s => s.StudentServices)
+            // Service-StudentService Relationship
+            modelBuilder.Entity<Service>()
+                .HasMany(s => s.StudentServices)
+                .WithOne(ss => ss.Service)
                 .HasForeignKey(ss => ss.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 

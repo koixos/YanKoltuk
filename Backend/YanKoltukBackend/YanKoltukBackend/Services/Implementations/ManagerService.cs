@@ -78,7 +78,7 @@ namespace YanKoltukBackend.Services.Implementations
             }
             catch (Exception ex)
             {
-                return ServiceResult<Service>.ErrorResult("Error: " + ex.InnerException.Message);
+                return ServiceResult<Service>.ErrorResult("Error: " + ex.InnerException?.Message);
             }
         }
 
