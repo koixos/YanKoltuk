@@ -10,18 +10,18 @@ namespace YanKoltukBackend.Models.Entities
     {
         public int StudentId { get; set; }
         [Required]
-        public int IdNo { get; set; }
+        public string? IdNo { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
-        public string SchoolNo { get; set; }
+        public string? SchoolNo { get; set; }
 
         [Required]
         [ForeignKey("Parent")]
         public int ParentId { get; set; }
         public Parent? Parent { get; set; }
 
-        public StudentService StudentService { get; set; }
+        public StudentService? StudentService { get; set; }
         public ICollection<ServiceLog> ServiceLogs { get; set; } = [];
     }
 }

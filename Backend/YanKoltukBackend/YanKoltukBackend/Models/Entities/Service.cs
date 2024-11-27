@@ -11,7 +11,7 @@ namespace YanKoltukBackend.Models.Entities
     {
         public int ServiceId { get; set; }
         [Required]
-        public string Plate { get; set; }
+        public string? Plate { get; set; }
         public int Capacity { get; set; }
         public string? DepartureLocation { get; set; }
         public string? DepartureTime { get; set; }

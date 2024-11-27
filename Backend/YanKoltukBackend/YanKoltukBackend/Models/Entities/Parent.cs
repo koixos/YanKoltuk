@@ -10,17 +10,17 @@ namespace YanKoltukBackend.Models.Entities
     {
         public int ParentId { get; set; }
         [Required]
-        public int IdNo { get; set; }
+        public String? IdNo { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [Required]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public ICollection<Student> Students { get; set; } = [];
     }
