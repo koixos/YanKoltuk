@@ -5,14 +5,14 @@ namespace YanKoltukBackend.Data
 {
     public class YanKoltukDbContext(DbContextOptions<YanKoltukDbContext> options) : DbContext(options)
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<Manager> Managers { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Parent> Parents { get; set; }
-        public DbSet<Service> Services { get; set; }
-        public DbSet<ServiceLog> ServiceLogs { get; set; }
-        public DbSet<StudentService> StudentServices { get; set; }
+        public DbSet<User>? Users { get; set; }
+        public DbSet<Admin>? Admins { get; set; }
+        public DbSet<Manager>? Managers { get; set; }
+        public DbSet<Student>? Students { get; set; }
+        public DbSet<Parent>? Parents { get; set; }
+        public DbSet<Service>? Services { get; set; }
+        public DbSet<ServiceLog>? ServiceLogs { get; set; }
+        public DbSet<StudentService>? StudentServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,11 +25,20 @@ namespace YanKoltukBackend.Data
             modelBuilder.Entity<ServiceLog>().ToTable("ServiceLog");
             modelBuilder.Entity<StudentService>().ToTable("StudentService");
 
+            ConfigureUserRelationships(modelBuilder);
+
+            ConfigureEntityRelationships(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        private static void ConfigureUserRelationships(ModelBuilder modelBuilder)
+        {
             // User-Admin Relationships
             modelBuilder.Entity<Admin>()
-                .HasOne(m => m.User)
+                .HasOne(a => a.User)
                 .WithMany()
-                .HasForeignKey(m => m.UserId)
+                .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // User-Manager Relationships
@@ -41,16 +50,26 @@ namespace YanKoltukBackend.Data
 
             // User-Service Relationships
             modelBuilder.Entity<Service>()
-                .HasOne(m => m.User)
+                .HasOne(s => s.User)
                 .WithMany()
-                .HasForeignKey(m => m.UserId)
+                .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // User-Parent Relationships
             modelBuilder.Entity<Parent>()
-                .HasOne(m => m.User)
+                .HasOne(p => p.User)
                 .WithMany()
-                .HasForeignKey(m => m.UserId)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private void ConfigureEntityRelationships(ModelBuilder modelBuilder)
+        {
+            // Admin-Manager Relationships
+            modelBuilder.Entity<Manager>()
+                .HasOne(m => m.Admin)
+                .WithMany(a => a.Managers)
+                .HasForeignKey(m => m.AdminId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Manager-Service Relationships
@@ -74,17 +93,11 @@ namespace YanKoltukBackend.Data
                 .HasForeignKey(ss => ss.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ServiceLog Relationships
-            modelBuilder.Entity<ServiceLog>()
-                .HasOne(sl => sl.Service)
-                .WithMany(s => s.ServiceLogs)
-                .HasForeignKey(sl => sl.ServiceId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ServiceLog>()
-                .HasOne(sl => sl.Student)
-                .WithMany(s => s.ServiceLogs)
-                .HasForeignKey(sl => sl.StudentId)
+            // StudentService-ServiceLog Relationships
+            modelBuilder.Entity<StudentService>()
+                .HasMany(ss => ss.ServiceLogs)
+                .WithOne(sl => sl.StudentService)
+                .HasForeignKey(sl => sl.StudentServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

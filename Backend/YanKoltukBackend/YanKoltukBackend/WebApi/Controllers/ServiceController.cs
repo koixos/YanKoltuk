@@ -3,42 +3,60 @@ using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
 using YanKoltukBackend.Services.Interfaces;
-using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class ServiceController(IServiceService serviceService, IFileService fileService, UserHelper userHelper) : ControllerBase
+    [Authorize(Roles = "Service")]
+    public class ServiceController(IServiceService serviceService, IStudentServiceService studentServiceService) : ControllerBase
     {
         private readonly IServiceService _serviceService = serviceService;
-        private readonly IFileService _fileService = fileService;
-        private readonly UserHelper _userHelper = userHelper;
+        private readonly IStudentServiceService _studentServiceService = studentServiceService;
 
-        [HttpGet("services")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> GetAllServices()
+        [HttpGet("students")]
+        public async Task<IActionResult> GetAllStudents()
         {
-            var services = await _serviceService.GetAllServicesAsync();
-            return Ok(services);
+            int serviceId = (await _serviceService.GetServiceIdAsync()).Data;
+            var students = await _studentServiceService.GetAllStudentsAsync(serviceId);
+            return Ok(students);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetServiceById(int id)
+        [HttpGet("drivingList")]
+        public async Task<IActionResult> GetDrivingList()
         {
-            var service = await _serviceService.GetServiceByIdAsync(id);
-            if (service == null) return NotFound();
-            return Ok(service);
+            int serviceId = (await _serviceService.GetServiceIdAsync()).Data;
+            var students = await _studentServiceService.GetDrivingListAsync(serviceId);
+            return Ok(students);
         }
 
-        /*[HttpGet("DownloadLogs")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> GetServiceLogs(int serviceId, DateTime date)
+        [HttpPut("editNote/{id}")]
+        public async Task<IActionResult> UpdateStudentNote([FromBody] string note, int id)
         {
-            var serviceLogs = await _serviceService.GetServiceLogsExcelAsync(serviceId);
-            var fileResult = _fileService.GenerateServiceLogsExcel(serviceLogs, date);
-            return fileResult;
-        }*/
+            int serviceId = (await _serviceService.GetServiceIdAsync()).Data;
+
+            var student = await _studentServiceService.GetStudentByIdAsync(serviceId, id);
+            if (student == null)
+                return BadRequest("Student not found");
+
+            var result = await _studentServiceService.UpdateNoteAsync(note, id);
+            return result.Success ? NoContent() : BadRequest(result.Message);
+        }
+
+        [HttpPut("updateStatus/{id}")]
+        public async Task<IActionResult> UpdateStudentStatus([FromBody] UpdateStudentStatusDto updateStudentStatusDto, int id)
+        {
+            var result = await _studentServiceService.UpdateStudentStatusAsync(updateStudentStatusDto, id);
+            return result.Success ? NoContent() : BadRequest(result.Message);
+        }
+
+        [HttpPut("editOrder")]
+        public async Task<IActionResult> UpdateStudentOrder([FromBody] List<StudentOrderDto> studentOrders)
+        {
+            if (studentOrders == null || studentOrders.Count == 0)
+                return BadRequest("Invalid data");
+            var result = await _studentServiceService.UpdateStudentOrderAsync(studentOrders);
+            return result.Success ? NoContent() : BadRequest(result.Message);
+        }
     }
 }

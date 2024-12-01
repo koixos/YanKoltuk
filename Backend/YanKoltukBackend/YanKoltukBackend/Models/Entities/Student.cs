@@ -22,6 +22,5 @@ namespace YanKoltukBackend.Models.Entities
         public Parent? Parent { get; set; }
 
         public StudentService? StudentService { get; set; }
-        public ICollection<ServiceLog> ServiceLogs { get; set; } = [];
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Application.Results;
+using YanKoltukBackend.Models.DTOs.AddDTOs;
+using YanKoltukBackend.Models.DTOs.UpdateDTOs;
 using YanKoltukBackend.Models.DTOs.UserDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -9,11 +11,22 @@ using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Services.Implementations
 {
-    public class ParentService(IRepository<User> userRepo, IRepository<Parent> parentRepo, UserHelper userHelper) : IParentService
+    public class ParentService(IRepository<User> userRepo, IRepository<Parent> parentRepo, IRepository<Student> studentRepo, UserHelper userHelper) : IParentService
     {
         private readonly IRepository<User> _userRepo = userRepo;
         private readonly IRepository<Parent> _parentRepo = parentRepo;
+        private readonly IRepository<Student> _studentRepo = studentRepo;
         private readonly UserHelper _userHelper = userHelper;
+
+        public async Task<ServiceResult<int>> GetParentIdAsync()
+        {
+            var userId = _userHelper.GetUserId();
+            var parents = await _parentRepo.GetAllAsync();
+            var parent = parents.FirstOrDefault(p => p.UserId == userId);
+            if (parent == null)
+                return ServiceResult<int>.ErrorResult("Error: Parent not found");
+            return ServiceResult<int>.SuccessResult(parent.ParentId);
+        }
 
         public async Task<ServiceResult<Parent>> CreateParentAsync([FromBody] ParentSignupDto parentSignupDto)
         {
@@ -30,6 +43,81 @@ namespace YanKoltukBackend.Services.Implementations
             };
             await _parentRepo.AddAsync(parent);
             return ServiceResult<Parent>.SuccessResult(parent, "Parent created");
+        }
+
+        public async Task<List<Student>> GetAllStudentsAsync(int parentId)
+        {
+            return (await _studentRepo.FindAsync(s => s.ParentId == parentId)).ToList();
+        }
+
+        public async Task<Student?> GetStudentByIdAsync(int parentId, int studentId)
+        {
+            return (await _studentRepo.FindAsync(s => (s.ParentId == parentId) && (s.StudentId == studentId))).FirstOrDefault();
+        }
+
+        public async Task<ServiceResult<Student>> AddStudentAsync(StudentDto studentDto, int parentId)
+        {
+            try
+            {
+                var parent = await _parentRepo.GetByIdAsync(parentId);
+                if (parent == null)
+                    return ServiceResult<Student>.ErrorResult("Error: Parent not found");
+
+                var student = new Student
+                {
+                    Name = studentDto.Name,
+                    IdNo = studentDto.IdNo,
+                    SchoolNo = studentDto.SchoolNo,
+                    ParentId = parentId,
+                    Parent = parent
+                };
+                await _studentRepo.AddAsync(student);
+
+                parent.Students.Add(student);
+                await _parentRepo.UpdateAsync(parent);
+
+                return ServiceResult<Student>.SuccessResult(student, "Student added");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<Student>.ErrorResult("Error: " + ex.InnerException?.Message);
+            }
+        }
+
+        public async Task<ServiceResult<Parent>> UpdateParentAsync(UpdateParentDto updateParentDto, int parentId)
+        {
+            try
+            {
+                var parent = await _parentRepo.GetByIdAsync(parentId);
+                if (parent == null)
+                    return ServiceResult<Parent>.ErrorResult("Error: Parent not found");
+
+                if (!string.IsNullOrWhiteSpace(updateParentDto.Phone))
+                    parent.Phone = updateParentDto.Phone;
+                if (!string.IsNullOrWhiteSpace(updateParentDto.Address))
+                    parent.Address = updateParentDto.Address;
+
+                await _parentRepo.UpdateAsync(parent);
+                return ServiceResult<Parent>.SuccessResult(parent, "Parent updated");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<Parent>.ErrorResult("Error: Parent not updated - " + ex.Message);
+            }
+        }
+        
+        public async Task<ServiceResult<Student>> DeleteStudentAsync(int parentId, int studentId)
+        {
+            var parent = await _parentRepo.GetByIdAsync(parentId);
+            if (parent == null)
+                return ServiceResult<Student>.ErrorResult("Error: Parent not found");
+
+            var student = await _studentRepo.GetByIdAsync(studentId);
+            if (student == null)
+                return ServiceResult<Student>.ErrorResult("Error: Student not found");
+
+            await _studentRepo.DeleteAsync(student);
+            return ServiceResult<Student>.SuccessResult(student);
         }
     }
 }

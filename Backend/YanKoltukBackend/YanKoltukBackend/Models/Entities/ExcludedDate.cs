@@ -3,13 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace YanKoltukBackend.Models.Entities
 {
-    public class ServiceLog
+    public class ExcludedDate
     {
-        public int ServiceLogId { get; set; }
-        public DateTime? Date { get; set; }
-        public TimeSpan? PickupTime { get; set; }
-        public TimeSpan DropOffTime { get; set; }
-        public string? Direction { get; set; }
+        public int ExcludedDateId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [Required]
         [ForeignKey("StudentService")]

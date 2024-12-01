@@ -12,7 +12,7 @@ using YanKoltukBackend.Data;
 namespace YanKoltukBackend.Migrations
 {
     [DbContext(typeof(YanKoltukDbContext))]
-    [Migration("20241125065541_InitialCreate")]
+    [Migration("20241129130605_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -78,8 +78,9 @@ namespace YanKoltukBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdNo")
-                        .HasColumnType("int");
+                    b.Property<string>("IdNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -189,10 +190,13 @@ namespace YanKoltukBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceLogId"));
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan?>("DropOffTime")
+                    b.Property<string>("Direction")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("DropOffTime")
                         .HasColumnType("time");
 
                     b.Property<TimeSpan?>("PickupTime")
@@ -202,9 +206,6 @@ namespace YanKoltukBackend.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TripType")
                         .HasColumnType("int");
 
                     b.HasKey("ServiceLogId");
@@ -224,8 +225,9 @@ namespace YanKoltukBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
-                    b.Property<int>("IdNo")
-                        .HasColumnType("int");
+                    b.Property<string>("IdNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -262,16 +264,14 @@ namespace YanKoltukBackend.Migrations
                     b.Property<bool>("Attended")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Direction")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Direction")
+                        .HasColumnType("int");
 
                     b.Property<string>("DriverNote")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("GetOff_GetOn")
-                        .HasColumnType("bit");
+                    b.Property<int>("GetOff_GetOn")
+                        .HasColumnType("int");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
@@ -286,7 +286,8 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
                     b.ToTable("StudentService", (string)null);
                 });
@@ -422,8 +423,8 @@ namespace YanKoltukBackend.Migrations
                         .IsRequired();
 
                     b.HasOne("YanKoltukBackend.Models.Entities.Student", "Student")
-                        .WithMany("StudentServices")
-                        .HasForeignKey("StudentId")
+                        .WithOne("StudentService")
+                        .HasForeignKey("YanKoltukBackend.Models.Entities.StudentService", "StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -460,7 +461,7 @@ namespace YanKoltukBackend.Migrations
                 {
                     b.Navigation("ServiceLogs");
 
-                    b.Navigation("StudentServices");
+                    b.Navigation("StudentService");
                 });
 #pragma warning restore 612, 618
         }

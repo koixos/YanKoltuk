@@ -8,10 +8,10 @@ namespace YanKoltukBackend.Services.Interfaces
     public interface IManagerService
     {
         Task<ServiceResult<int>> GetManagerIdAsync();
-        Task<List<Service>> GetAllServicesAsync();
-        Task<Service> GetServiceByIdAsync(int serviceId);
+        Task<List<Service>> GetAllServicesAsync(int managerId);
+        Task<Service?> GetServiceByIdAsync(int managerId, int serviceId);
         Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto, int managerId);
-        Task<ServiceResult<Service>> UpdateServiceAsync(UpdateServiceDto updateServiceDto, Service service);
-        Task<ServiceResult<Service>> DeleteServiceAsync(int serviceId);
+        Task<ServiceResult<Service>> UpdateServiceAsync(UpdateServiceDto updateServiceDto, int managerId, int serviceId);
+        Task<ServiceResult<Service>> DeleteServiceAsync(int managerId, int serviceId);
     }
 }

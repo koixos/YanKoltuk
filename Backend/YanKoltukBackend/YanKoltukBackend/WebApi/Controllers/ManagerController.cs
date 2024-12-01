@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
-using YanKoltukBackend.Services.Implementations;
 using YanKoltukBackend.Services.Interfaces;
 
 namespace YanKoltukBackend.WebApi.Controllers
@@ -17,52 +16,47 @@ namespace YanKoltukBackend.WebApi.Controllers
         [HttpGet("manager")]
         public async Task<IActionResult> GetManagerId()
         {
-            var managerId = await _managerService.GetManagerIdAsync();
+            var managerId = (await _managerService.GetManagerIdAsync()).Data;
             return Ok(managerId);
         }
 
         [HttpGet("services")]
         public async Task<IActionResult> GetAllServices()
         {
-            var services = await _managerService.GetAllServicesAsync();
+            int managerId = (await _managerService.GetManagerIdAsync()).Data;
+            var services = await _managerService.GetAllServicesAsync(managerId);
             return Ok(services);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetServiceById(int id)
         {
-            var service = await _managerService.GetServiceByIdAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-            return Ok(service);
+            int managerId = (await _managerService.GetManagerIdAsync()).Data;
+            var service = await _managerService.GetServiceByIdAsync(managerId, id);
+            return service == null ? NotFound() : Ok(service);
         }
 
         [HttpPost("addService")]
         public async Task<IActionResult> AddService([FromBody] ServiceDto serviceDto)
         {
-            var managerId = (await _managerService.GetManagerIdAsync()).Data;
+            int managerId = (await _managerService.GetManagerIdAsync()).Data;
             var result = await _managerService.AddServiceAsync(serviceDto, managerId);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut("updateService/{id}")]
         public async Task<IActionResult> UpdateService([FromBody] UpdateServiceDto updatedServiceDto, int id)
         {
-            var service = await _managerService.GetServiceByIdAsync(id);
-            if (service == null)
-            {
-                return NotFound("Service not found.");
-            }
-            var result = await _managerService.UpdateServiceAsync(updatedServiceDto, service);
+            int managerId = (await _managerService.GetManagerIdAsync()).Data;
+            var result = await _managerService.UpdateServiceAsync(updatedServiceDto, managerId, id);
             return result.Success ? NoContent() : BadRequest(result.Message);
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("deleteService/{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
-            var result = await _managerService.DeleteServiceAsync(id);
+            int managerId = (await _managerService.GetManagerIdAsync()).Data;
+            var result = await _managerService.DeleteServiceAsync(managerId, id);
             return result.Success ? NoContent() : BadRequest(result.Message);
         }
     }

@@ -37,6 +37,5 @@ namespace YanKoltukBackend.Models.Entities
         public Manager? Manager { get; set; }
 
         public ICollection<StudentService> StudentServices { get; set; } = [];
-        public ICollection<ServiceLog> ServiceLogs { get; set; } = [];
     }
 }

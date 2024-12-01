@@ -21,9 +21,7 @@ namespace YanKoltukBackend.Services.Implementations
             var admins = await _adminRepo.GetAllAsync();
             var admin = admins.FirstOrDefault(a => a.UserId == userId);
             if (admin == null)
-            {
-                return ServiceResult<int>.ErrorResult("Admin not found");
-            }
+                return ServiceResult<int>.ErrorResult("Error: Admin not found");
             return ServiceResult<int>.SuccessResult(admin.AdminId);
         }
 
@@ -37,27 +35,30 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<Admin>.SuccessResult(admin, "Admin created w/ username & passwd: admin");
         }
 
-        public async Task<List<Manager>> GetAllManagersAsync()
+        public async Task<List<Manager>> GetAllManagersAsync(int adminId)
         {
-            return (await _managerRepo.GetAllAsync()).ToList();
+            return (await _managerRepo.FindAsync(m => m.AdminId == adminId)).ToList();
         }
 
         public async Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto, int adminId)
         {
             try
             {
+                var admin = await _adminRepo.GetByIdAsync(adminId);
+                if (admin == null)
+                    return ServiceResult<Manager>.ErrorResult("Error: Admin not found");
+
                 var passwd = AuthHelper.GeneratePasswd();
                 var user = _userHelper.CreateUser(managerDto.Username, passwd, Roles.Manager.GetDescription());
                 await _userRepo.AddAsync(user);
 
-                var manager = new Manager { User = user };
-                await _managerRepo.AddAsync(manager);
-
-                var admin = await _adminRepo.GetByIdAsync(adminId);
-                if (admin == null)
+                var manager = new Manager
                 {
-                    return ServiceResult<Manager>.ErrorResult("Admin not found");
-                }
+                    User = user,
+                    AdminId = adminId,
+                    Admin = admin
+                };
+                await _managerRepo.AddAsync(manager);
 
                 admin.Managers.Add(manager);
                 await _adminRepo.UpdateAsync(admin);
@@ -68,6 +69,20 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 return ServiceResult<Manager>.ErrorResult("Error: " + ex.Message);
             }
+        }
+
+        public async Task<ServiceResult<Manager>> DeleteManagerAsync(int managerId)
+        {
+            var manager = await _managerRepo.GetByIdAsync(managerId);
+            if (manager == null)
+                return ServiceResult<Manager>.ErrorResult("Error: Manager not found");
+
+            var user = await _userRepo.GetByIdAsync(manager.UserId);
+
+            await _managerRepo.DeleteAsync(manager);
+            await _userRepo.DeleteAsync(user);
+
+            return ServiceResult<Manager>.SuccessResult(manager);
         }
     }
 }

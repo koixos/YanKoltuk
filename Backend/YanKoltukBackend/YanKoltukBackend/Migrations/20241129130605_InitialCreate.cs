@@ -52,7 +52,7 @@ namespace YanKoltukBackend.Migrations
                 {
                     ParentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdNo = table.Column<int>(type: "int", nullable: false),
+                    IdNo = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -100,7 +100,7 @@ namespace YanKoltukBackend.Migrations
                 {
                     StudentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdNo = table.Column<int>(type: "int", nullable: false),
+                    IdNo = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SchoolNo = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ParentId = table.Column<int>(type: "int", nullable: false)
@@ -166,10 +166,10 @@ namespace YanKoltukBackend.Migrations
                 {
                     ServiceLogId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PickupTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    DropOffTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    TripType = table.Column<int>(type: "int", nullable: false),
+                    DropOffTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -197,10 +197,10 @@ namespace YanKoltukBackend.Migrations
                     StudentServiceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Attended = table.Column<bool>(type: "bit", nullable: false),
-                    GetOff_GetOn = table.Column<bool>(type: "bit", nullable: false),
-                    DriverNote = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GetOff_GetOn = table.Column<int>(type: "int", nullable: false),
+                    DriverNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SortIndex = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Direction = table.Column<int>(type: "int", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -323,7 +323,8 @@ namespace YanKoltukBackend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_StudentService_StudentId",
                 table: "StudentService",
-                column: "StudentId");
+                column: "StudentId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Username",

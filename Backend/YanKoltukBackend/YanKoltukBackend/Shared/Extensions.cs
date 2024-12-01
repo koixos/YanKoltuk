@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
+using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Shared
 {
@@ -16,6 +17,37 @@ namespace YanKoltukBackend.Shared
                     .SingleOrDefault()
                     as DescriptionAttribute;
             return attribute?.Description ?? e.ToString();
+        }
+
+        public static StudentStatus GetStudentStatus(this string s)
+        {
+            if (s.Equals("GetOff"))
+            {
+                return StudentStatus.GetOff;
+            }
+            else if (s.Equals("GetOn"))
+            {
+                return StudentStatus.GetOn;
+            }
+            else
+            {
+                return StudentStatus.Error;
+            }
+        }
+
+        public static TripType GetTripType(this string s)
+        {
+            if (s.Equals("ToSchool"))
+            {
+                return TripType.ToSchool;
+            }
+            else if (s.Equals("FromSchool"))
+            {
+                return TripType.FromSchool;
+            } else
+            {
+                return TripType.Error;
+            }
         }
     }
 }

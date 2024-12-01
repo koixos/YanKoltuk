@@ -10,7 +10,7 @@ namespace YanKoltukBackend.Services.Implementations
         public FileResult GenerateServiceLogsExcel(List<ServiceLog> serviceLogs, DateTime date)
         {
             using var wb = new XLWorkbook();
-            var toSchoolLogs = serviceLogs.Where(
+            /*var toSchoolLogs = serviceLogs.Where(
                 log => log.TripType == TripType.ToSchool && log.Date.Date == date.Date).ToList();
             var fromSchoolLogs = serviceLogs.Where(
                 log => log.TripType == TripType.FromSchool && log.Date.Date == date.Date).ToList();
@@ -49,7 +49,7 @@ namespace YanKoltukBackend.Services.Implementations
                 ws.Cell(startRow + i + 2, 3).Value = log.PickupTime?.ToString(@"hh\:mm") ?? "N/A";
                 ws.Cell(startRow + i + 2, 4).Value = log.DropOffTime?.ToString(@"hh\:mm") ?? "N/A";
             }
-
+            */
             using var stream = new MemoryStream();
             wb.SaveAs(stream);
             var content = stream.ToArray();

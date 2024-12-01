@@ -7,11 +7,12 @@ namespace YanKoltukBackend.Models.Entities
     public class StudentService
     {
         public int StudentServiceId { get; set; }
-        public bool Attended { get; set; } = true;
-        public StudentStatus GetOff_GetOn { get; set; } = StudentStatus.GetOff;
-        public string? DriverNote { get; set; }
+        public StudentStatus Status { get; set; } = StudentStatus.GetOff;
+        public string DriverNote { get; set; } = string.Empty;
         public int SortIndex { get; set; } = 0;
         public TripType? Direction { get; set; }
+        public DateTime? ExcludedStartDate { get; set; }
+        public DateTime? ExcludedEndDate { get; set; }
 
         [Required]
         [ForeignKey("Service")]
@@ -22,6 +23,8 @@ namespace YanKoltukBackend.Models.Entities
         [ForeignKey("Student")]
         public int StudentId { get; set; }
         public Student? Student { get; set; }
+
+        public ICollection<ServiceLog> ServiceLogs { get; set; } = [];
     }
 
     public enum StudentStatus
@@ -30,15 +33,21 @@ namespace YanKoltukBackend.Models.Entities
         GetOff,
 
         [Description("Bindi")]
-        GetOn
+        GetOn,
+
+        [Description("Hata")]
+        Error
     }
 
     public enum TripType
     {
-        [Description("Gidiş")]
+        [Description("Okula Gidiş")]
         ToSchool,
 
-        [Description("Dönüş")]
-        FromSchool
+        [Description("Okuldan Dönüş")]
+        FromSchool,
+
+        [Description("Hata")]
+        Error
     }
 }

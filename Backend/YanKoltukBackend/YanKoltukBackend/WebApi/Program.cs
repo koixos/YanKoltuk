@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using YanKoltukBackend.Data;
+using YanKoltukBackend.Hubs;
 using YanKoltukBackend.Repositories.Implementations;
 using YanKoltukBackend.Repositories.Interfaces;
 using YanKoltukBackend.Services.Implementations;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<YanKoltukDbContext>(options => {
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped<UserHelper>();
 builder.Services.AddScoped<AuthHelper>();
@@ -28,6 +30,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IParentService, ParentService>();
+builder.Services.AddScoped<IStudentServiceService, StudentServiceService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddAuthentication(options =>
@@ -72,6 +75,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.UseCors("AllowReactApp");
 

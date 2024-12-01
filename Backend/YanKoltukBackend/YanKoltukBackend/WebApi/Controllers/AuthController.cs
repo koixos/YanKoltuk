@@ -16,33 +16,21 @@ namespace YanKoltukBackend.WebApi.Controllers
         public async Task<IActionResult> AdminSignup()
         {
             var result = await _adminService.CreateAdminAsync();
-            if (!result.Success)
-            {
-                return BadRequest(result.Message);
-            }
-            return Ok(result.Data);
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 
         [HttpPost("signup")]
         public async Task<IActionResult> ParentSignup([FromBody] ParentSignupDto parentSignupDto)
         {
             var result = await _parentService.CreateParentAsync(parentSignupDto);
-            if (!result.Success)
-            {
-                return BadRequest(result.Message);
-            }
-            return Ok(result.Data);
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             var token = await _userService.AuthenticateUserAsync(loginDto);
-            if (token == null)
-            {
-                return Unauthorized("Invalid credentials");
-            }
-            return Ok(new { Token = token });
+            return token == null ? Unauthorized("Invalid credentials") : Ok(new { Token  = token });
         }
     }
 }
