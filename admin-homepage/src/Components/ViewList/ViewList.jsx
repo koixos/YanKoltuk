@@ -2,6 +2,10 @@ import React from "react";
 import "./ViewList.css"
 
 function ViewList({ items, onItemClick }) {
+    if (!items || items.length === 0) {
+        return <p>Kayıtlı servis bulunamadı.</p>
+    }
+    
     return (
         <div class="container" id="viewlist-container">
             <div class="items" id="viewlist-items">
@@ -13,12 +17,12 @@ function ViewList({ items, onItemClick }) {
                     {
                         items.map((item) => (
                             <div 
-                                key={item.id}
+                                key={item.serviceId}
                                 onClick={() => onItemClick(item)}
                                 class="items-body-content"
                                 id="viewlist-items-body-content"
                             >
-                                <span> {item.plate} - {item.driver.name} </span>
+                                <span> {item.plate} - {item.driverName} </span>
                                 <i class="fa fa-angle-right"></i>
                             </div>
                         ))

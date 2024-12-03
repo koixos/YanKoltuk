@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ViewList from "../../Components/ViewList/ViewList"
-import services from "../../db/serviceDB"
 import ServiceDetail from '../../Components/ServiceDetail/ServiceDetail';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../Services/AxiosInstance';
 
 const ViewServices = () => {
     const [selectedService, setSelectedService] = useState(null);
-    const [allServices, setAllServices] = useState(services);
-
+    const [services, setServices] = useState();
     const navigate = useNavigate();
 
     const handleServiceClick = (service) => {
         setSelectedService(service);
-        navigate(`/view-services/${service.id}`);
+        navigate(`/view-services/${service.serviceId}`);
     };
 
     const handleBack = () => {
@@ -21,14 +20,25 @@ const ViewServices = () => {
     }
 
     const handleEdit = (updatedService) => {
-        setAllServices((prevServices) =>
+        setServices((prevServices) =>
             prevServices.map((service) =>
-                service.id === updatedService.id ? updatedService : service
+                service.serviceId === updatedService.serviceId ? updatedService : service
             )
         );
-
         setSelectedService(updatedService);
     }
+
+    useEffect(() => {
+        const fetchServicesAsync = async () => {
+            try {
+                const response = await axiosInstance.get("api/service/services");
+                setServices(response.data);
+            } catch (err) {
+                console.error("Could not load services: ", err);
+            }
+        };
+        fetchServicesAsync();
+    }, []);
 
     return (
         <div className="view-services-container">
@@ -39,7 +49,7 @@ const ViewServices = () => {
                     onEdit={handleEdit}
                 />
             ) : (
-                <ViewList items={allServices} onItemClick={handleServiceClick} />
+                <ViewList items={services} onItemClick={handleServiceClick} />
             )}
         </div>
     );

@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ServiceDetail.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import axiosInstance from "../../Services/AxiosInstance";
 
 function ServiceDetail({ service, onBack, onEdit }) {
+    const [data, setData] = useState(service || { students: [] });
     const [showPopup, setShowPopup] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [updatedService, setUpdatedService] = useState(service);
+
     const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData((prevData) => ({ 
+            ...prevData, 
+            [name]: value,
+        }));
+    }
+
+    const handleSubmitAsync = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axiosInstance.put(`api/manager/update/${service.serviceId}`, data);
+            onEdit(response.data);
+        } catch (err) {
+            console.error("Could not update the service: ", err);
+        }
+    };
 
     const handleBack = () => {
         return onBack(null);
@@ -17,31 +38,8 @@ function ServiceDetail({ service, onBack, onEdit }) {
 		if (isEditing) {
 			onEdit(updatedService);
 		}
-
         setIsEditing((prev) => !prev);
     };
-
-    const handleDriverChange = (e) => {
-        const { name, value } = e.target;
-        setUpdatedService((prev) => ({
-            ...prev,
-            driver: {
-                ...prev.driver,
-                [name]: value
-            }
-        }));
-    };
-
-    const handleStewardessChange = (e) => {
-        const { name, value } = e.target;
-        setUpdatedService((prev) => ({
-            ...prev,
-            stewardess: {
-                ...prev.stewardess,
-                [name]: value
-            }
-        }));
-    }; 
 
     const handleDelete = () => {
         setShowPopup(true);
@@ -106,11 +104,11 @@ function ServiceDetail({ service, onBack, onEdit }) {
                                     <input
                                         type="text"
                                         name="name"
-                                        value={updatedService.driver.name}
-                                        onChange={handleDriverChange}
+                                        value={updatedService.driverName}
+                                        //onChange={handleDriverChange}
                                     />
                                 ) : (
-                                    updatedService.driver.name
+                                    updatedService.driverName
                                 )}
                             </div>
                             <hr />
@@ -122,11 +120,11 @@ function ServiceDetail({ service, onBack, onEdit }) {
                                     <input
                                         type="text"
                                         name="phone"
-                                        value={updatedService.driver.phone}
-                                        onChange={handleDriverChange}
+                                        value={updatedService.driverPhone}
+                                        //onChange={handleDriverChange}
                                     />
                                 ) : (
-                                    updatedService.driver.phone
+                                    updatedService.driverPhone
                                 )}
 							</div>
                             <hr />
@@ -138,11 +136,11 @@ function ServiceDetail({ service, onBack, onEdit }) {
                                     <input
                                         type="text"
                                         name="name"
-                                        value={updatedService.stewardess.name}
-                                        onChange={handleStewardessChange}
+                                        value={updatedService.stewardessName}
+                                        //onChange={handleStewardessChange}
                                     />
                                 ) : (
-                                    updatedService.stewardess.name
+                                    updatedService.stewardessName
                                 )}
 							</div>
                             <hr />
@@ -154,11 +152,11 @@ function ServiceDetail({ service, onBack, onEdit }) {
                                     <input
                                         type="text"
                                         name="phone"
-                                        value={updatedService.stewardess.phone}
-                                        onChange={handleStewardessChange}
+                                        value={updatedService.stewardessPhone}
+                                        //onChange={handleStewardessChange}
                                     />
                                 ) : (
-                                    updatedService.stewardess.phone
+                                    updatedService.stewardessPhone
                                 )}
 							</div>
                             <hr />
@@ -187,18 +185,20 @@ function ServiceDetail({ service, onBack, onEdit }) {
                     <hr />
                 </div>
                 <div className="items-body" id="servicedetail-items-body">
-                    {
+                    {service.students && service.students.length > 0 ? (
                         service.students.map((student, i) => (
                             <div 
                                 key={i}
                                 className="items-body-content"
                                 id="servicedetail-items-body-content"
                             >
-                                <span> {student.schoolNumber} - {student.name} </span>
+                                <span> {student.schoolNo} - {student.name} </span>
                                 <hr />
                             </div>
                         ))
-                    }
+                    ) : (
+                        <p>Kayıtlı öğrenci bulunamadı.</p>
+                    )}
                 </div>
             </div>
 
