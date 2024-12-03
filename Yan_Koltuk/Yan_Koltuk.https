@@ -1,6 +1,0 @@
-@Yan_Koltuk_HostAddress = http://localhost:5034
-
-GET {{Yan_Koltuk_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
