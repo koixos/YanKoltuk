@@ -1,6 +1,4 @@
-﻿using YanKoltukBackend.Application.Results;
-using YanKoltukBackend.Models.DTOs.UserDTOs;
-using YanKoltukBackend.Models.Entities;
+﻿using YanKoltukBackend.Models.DTOs.UserDTOs;
 
 namespace YanKoltukBackend.Services.Interfaces
 {

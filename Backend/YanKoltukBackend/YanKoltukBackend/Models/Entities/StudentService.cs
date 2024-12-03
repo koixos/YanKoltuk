@@ -11,8 +11,8 @@ namespace YanKoltukBackend.Models.Entities
         public string DriverNote { get; set; } = string.Empty;
         public int SortIndex { get; set; } = 0;
         public TripType? Direction { get; set; }
-        public DateTime? ExcludedStartDate { get; set; }
-        public DateTime? ExcludedEndDate { get; set; }
+        public DateTime? ExcludedStartDate { get; set; } = null;
+        public DateTime? ExcludedEndDate { get; set; } = null;
 
         [Required]
         [ForeignKey("Service")]

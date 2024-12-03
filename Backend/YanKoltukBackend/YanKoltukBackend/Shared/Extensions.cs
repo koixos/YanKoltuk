@@ -22,32 +22,19 @@ namespace YanKoltukBackend.Shared
         public static StudentStatus GetStudentStatus(this string s)
         {
             if (s.Equals("GetOff"))
-            {
                 return StudentStatus.GetOff;
-            }
-            else if (s.Equals("GetOn"))
-            {
+            if (s.Equals("GetOn"))
                 return StudentStatus.GetOn;
-            }
-            else
-            {
-                return StudentStatus.Error;
-            }
+            return StudentStatus.Error;
         }
 
         public static TripType GetTripType(this string s)
         {
             if (s.Equals("ToSchool"))
-            {
                 return TripType.ToSchool;
-            }
-            else if (s.Equals("FromSchool"))
-            {
+            if (s.Equals("FromSchool"))
                 return TripType.FromSchool;
-            } else
-            {
-                return TripType.Error;
-            }
+            return TripType.Error;
         }
     }
 }

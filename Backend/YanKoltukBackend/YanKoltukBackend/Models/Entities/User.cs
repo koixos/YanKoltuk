@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 
 namespace YanKoltukBackend.Models.Entities
 {
@@ -31,9 +30,6 @@ namespace YanKoltukBackend.Models.Entities
         Parent,
 
         [Description("Service")]
-        Service,
-
-        [Description("Student")]
-        Student
+        Service
     }
 }

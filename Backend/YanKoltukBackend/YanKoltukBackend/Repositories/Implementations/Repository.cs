@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using YanKoltukBackend.Data;
-using YanKoltukBackend.Models.DTOs.AddDTOs;
-using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
-using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Repositories.Implementations
 {

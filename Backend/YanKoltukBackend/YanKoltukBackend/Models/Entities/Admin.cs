@@ -8,9 +8,8 @@ namespace YanKoltukBackend.Models.Entities
 
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public ICollection<Manager> Managers { get; set; } = [];
-        public ICollection<Service> Services { get; set; } = [];
     }
 }

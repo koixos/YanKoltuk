@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
-using YanKoltukBackend.Services.Implementations;
 using YanKoltukBackend.Services.Interfaces;
 
 namespace YanKoltukBackend.WebApi.Controllers
