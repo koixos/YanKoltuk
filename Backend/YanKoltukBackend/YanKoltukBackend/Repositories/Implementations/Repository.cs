@@ -26,10 +26,13 @@ namespace YanKoltukBackend.Repositories.Implementations
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IQueryable<T>>? include = null)
         {
             ArgumentNullException.ThrowIfNull(predicate);
-            return await _dbSet.Where(predicate).ToListAsync();
+            IQueryable<T> q = _dbSet.Where(predicate);
+            if (include != null)
+                q = include(q);
+            return await q.ToListAsync();
         }
 
         public async Task AddAsync(T entity)

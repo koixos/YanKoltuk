@@ -7,6 +7,7 @@ namespace YanKoltukBackend.Models.Entities
     {
         public int ManagerId { get; set; }
 
+        [Required]
         [ForeignKey("User")]
         public int UserId { get; set; }
         public User? User { get; set; }

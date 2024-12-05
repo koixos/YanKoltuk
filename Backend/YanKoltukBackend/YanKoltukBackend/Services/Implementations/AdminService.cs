@@ -1,5 +1,7 @@
-﻿using YanKoltukBackend.Application.Results;
+﻿using Microsoft.EntityFrameworkCore;
+using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
+using YanKoltukBackend.Models.DTOs.SendDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
 using YanKoltukBackend.Services.Interfaces;
@@ -30,14 +32,33 @@ namespace YanKoltukBackend.Services.Implementations
             var user = _userHelper.CreateUser("admin", "admin", Roles.Admin.GetDescription());
             await _userRepo.AddAsync(user);
 
-            var admin = new Admin { User = user };
+            var admin = new Admin
+            {
+                UserId = user.UserId,
+                User = user
+            };
             await _adminRepo.AddAsync(admin);
             return ServiceResult<Admin>.SuccessResult(admin, "Admin created w/ username & passwd: admin");
         }
 
-        public async Task<List<Manager>> GetAllManagersAsync(int adminId)
+        public async Task<ServiceResult<List<SendManagerDto>>> GetAllManagersAsync(int adminId)
         {
-            return (await _managerRepo.FindAsync(m => m.AdminId == adminId)).ToList();
+            try
+            {
+                var managers = await _managerRepo.FindAsync(
+                    m => m.AdminId == adminId,
+                    include: query => query.Include(m => m.User));
+                var managerDtos = managers.Select(m => new SendManagerDto
+                {
+                    ManagerId = m.ManagerId,
+                    Username = m.User?.Username ?? "Hata"
+                }).ToList();
+
+                return ServiceResult<List<SendManagerDto>>.SuccessResult(managerDtos);
+            } catch (Exception ex)
+            {
+                return ServiceResult<List<SendManagerDto>>.ErrorResult(ex.Message);
+            }
         }
 
         public async Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto, int adminId)
@@ -50,10 +71,15 @@ namespace YanKoltukBackend.Services.Implementations
 
                 var passwd = AuthHelper.GeneratePasswd();
                 var user = _userHelper.CreateUser(managerDto.Username, passwd, Roles.Manager.GetDescription());
+
+                if (user == null)
+                    return ServiceResult<Manager>.ErrorResult("Error: User creation failed");
+
                 await _userRepo.AddAsync(user);
 
                 var manager = new Manager
                 {
+                    UserId = user.UserId,
                     User = user,
                     AdminId = adminId,
                     Admin = admin

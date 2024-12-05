@@ -48,7 +48,7 @@ namespace YanKoltukBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManagerId"));
 
-                    b.Property<int?>("AdminId")
+                    b.Property<int>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -111,9 +111,6 @@ namespace YanKoltukBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceId"));
 
-                    b.Property<int?>("AdminId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
@@ -159,8 +156,6 @@ namespace YanKoltukBackend.Migrations
 
                     b.HasKey("ServiceId");
 
-                    b.HasIndex("AdminId");
-
                     b.HasIndex("DriverIdNo")
                         .IsUnique()
                         .HasFilter("[DriverIdNo] IS NOT NULL");
@@ -199,17 +194,12 @@ namespace YanKoltukBackend.Migrations
                     b.Property<TimeSpan?>("PickupTime")
                         .HasColumnType("time");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentServiceId")
                         .HasColumnType("int");
 
                     b.HasKey("ServiceLogId");
 
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentServiceId");
 
                     b.ToTable("ServiceLog", (string)null);
                 });
@@ -258,22 +248,26 @@ namespace YanKoltukBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentServiceId"));
 
-                    b.Property<bool>("Attended")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("Direction")
                         .HasColumnType("int");
 
                     b.Property<string>("DriverNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GetOff_GetOn")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("ExcludedEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ExcludedStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
                     b.Property<int>("SortIndex")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
@@ -334,15 +328,19 @@ namespace YanKoltukBackend.Migrations
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Manager", b =>
                 {
-                    b.HasOne("YanKoltukBackend.Models.Entities.Admin", null)
+                    b.HasOne("YanKoltukBackend.Models.Entities.Admin", "Admin")
                         .WithMany("Managers")
-                        .HasForeignKey("AdminId");
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("YanKoltukBackend.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Admin");
 
                     b.Navigation("User");
                 });
@@ -360,10 +358,6 @@ namespace YanKoltukBackend.Migrations
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Service", b =>
                 {
-                    b.HasOne("YanKoltukBackend.Models.Entities.Admin", null)
-                        .WithMany("Services")
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("YanKoltukBackend.Models.Entities.Manager", "Manager")
                         .WithMany("Services")
                         .HasForeignKey("ManagerId")
@@ -383,21 +377,13 @@ namespace YanKoltukBackend.Migrations
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.ServiceLog", b =>
                 {
-                    b.HasOne("YanKoltukBackend.Models.Entities.Service", "Service")
+                    b.HasOne("YanKoltukBackend.Models.Entities.StudentService", "StudentService")
                         .WithMany("ServiceLogs")
-                        .HasForeignKey("ServiceId")
+                        .HasForeignKey("StudentServiceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("YanKoltukBackend.Models.Entities.Student", "Student")
-                        .WithMany("ServiceLogs")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Service");
-
-                    b.Navigation("Student");
+                    b.Navigation("StudentService");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Student", b =>
@@ -433,8 +419,6 @@ namespace YanKoltukBackend.Migrations
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Admin", b =>
                 {
                     b.Navigation("Managers");
-
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Manager", b =>
@@ -449,16 +433,17 @@ namespace YanKoltukBackend.Migrations
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Service", b =>
                 {
-                    b.Navigation("ServiceLogs");
-
                     b.Navigation("StudentServices");
                 });
 
             modelBuilder.Entity("YanKoltukBackend.Models.Entities.Student", b =>
                 {
-                    b.Navigation("ServiceLogs");
-
                     b.Navigation("StudentService");
+                });
+
+            modelBuilder.Entity("YanKoltukBackend.Models.Entities.StudentService", b =>
+                {
+                    b.Navigation("ServiceLogs");
                 });
 #pragma warning restore 612, 618
         }

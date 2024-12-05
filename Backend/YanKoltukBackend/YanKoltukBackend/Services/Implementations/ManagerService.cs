@@ -1,5 +1,8 @@
-﻿using YanKoltukBackend.Application.Results;
+﻿using Microsoft.EntityFrameworkCore;
+using YanKoltukBackend.Application.Results;
+using YanKoltukBackend.Data;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
+using YanKoltukBackend.Models.DTOs.SendDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -9,12 +12,24 @@ using YanKoltukBackend.Shared.Helpers;
 
 namespace YanKoltukBackend.Services.Implementations
 {
-    public class ManagerService(IRepository<User> userRepo, IRepository<Manager> managerRepo, IRepository<Service> serviceRepo, UserHelper userHelper) : IManagerService
+    public class ManagerService : IManagerService
     {
-        private readonly IRepository<User> _userRepo = userRepo;
-        private readonly IRepository<Manager> _managerRepo = managerRepo;
-        private readonly IRepository<Service> _serviceRepo = serviceRepo;
-        private readonly UserHelper _userHelper = userHelper;
+        private readonly YanKoltukDbContext _context;
+        private readonly DbSet<User> _userDbSet;
+        private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Manager> _managerRepo;
+        private readonly IRepository<Service> _serviceRepo;
+        private readonly UserHelper _userHelper;
+
+        public ManagerService(YanKoltukDbContext context, IRepository<User> userRepo, IRepository<Manager> managerRepo, IRepository<Service> serviceRepo, UserHelper userHelper)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _userDbSet = _context.Set<User>();
+            _userRepo = userRepo;
+            _managerRepo = managerRepo;
+            _serviceRepo = serviceRepo;
+            _userHelper = userHelper;
+        }
 
         public async Task<ServiceResult<int>> GetManagerIdAsync()
         {
@@ -26,9 +41,24 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<int>.SuccessResult(manager.ManagerId);
         }
 
-        public async Task<List<Service>> GetAllServicesAsync(int managerId)
+        public async Task<List<SendServiceDto>> GetAllServicesAsync(int managerId)
         {
-            return (await _serviceRepo.FindAsync(s => s.ManagerId == managerId)).ToList();
+            var services = await _serviceRepo.FindAsync(s => s.ManagerId == managerId);
+
+            return services.Select(s => new SendServiceDto
+            {
+                ServiceId = s.ServiceId,
+                Plate = s.Plate,
+                Capacity = s.Capacity,
+                DepartureLocation = s.DepartureLocation,
+                DepartureTime = s.DepartureTime,
+                DriverIdNo = s.DriverIdNo,
+                DriverName = s.DriverName,
+                DriverPhone = s.DriverPhone,
+                StewardessIdNo = s.StewardessIdNo,
+                StewardessName = s.StewardessName,
+                StewardessPhone = s.StewardessPhone
+            }).ToList();
         }
 
         public async Task<Service?> GetServiceByIdAsync(int managerId, int serviceId)
@@ -46,7 +76,7 @@ namespace YanKoltukBackend.Services.Implementations
 
                 var passwd = AuthHelper.GeneratePasswd();
                 var user = _userHelper.CreateUser(serviceDto.Plate, passwd, Roles.Service.GetDescription());
-                await _userRepo.AddAsync(user);
+                await _userDbSet.AddAsync(user);
 
                 var service = new Service
                 {
@@ -67,6 +97,7 @@ namespace YanKoltukBackend.Services.Implementations
                     StewardessPhoto = serviceDto.StewardessPhoto
                 };
                 await _serviceRepo.AddAsync(service);
+                await _context.SaveChangesAsync();
 
                 manager.Services.Add(service);
                 await _managerRepo.UpdateAsync(manager);
@@ -114,7 +145,7 @@ namespace YanKoltukBackend.Services.Implementations
             }
             catch (Exception ex)
             {
-                return ServiceResult<Service>.ErrorResult("Error: Service not updated - " + ex.Message);
+                return ServiceResult<Service>.ErrorResult("Error: Service not updated - " + ex.InnerException?.Message);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using YanKoltukBackend.Models.DTOs.SendDTOs;
 using YanKoltukBackend.Models.DTOs.UserDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -12,7 +13,7 @@ namespace YanKoltukBackend.Services.Implementations
         private readonly IRepository<User> _userRepo = userRepo;
         private readonly AuthHelper _authHelper = authHelper;
 
-        public async Task<string?> AuthenticateUserAsync(LoginDto loginDto)
+        public async Task<SendUserDto> AuthenticateUserAsync(LoginDto loginDto)
         {
             ArgumentNullException.ThrowIfNull(loginDto);
             var userList = await _userRepo.FindAsync(u => u.Username == loginDto.Username);
@@ -30,7 +31,13 @@ namespace YanKoltukBackend.Services.Implementations
                 new(ClaimTypes.Role, user.Role)
             };
 
-            return _authHelper.GenerateJwtToken(claims);
+            var token = _authHelper.GenerateJwtToken(claims);
+
+            return new SendUserDto
+            {
+                Token = token,
+                Role = user.Role
+            };
         }
     }
 }

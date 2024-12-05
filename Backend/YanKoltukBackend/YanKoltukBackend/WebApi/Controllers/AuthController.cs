@@ -29,8 +29,8 @@ namespace YanKoltukBackend.WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var token = await _userService.AuthenticateUserAsync(loginDto);
-            return token == null ? Unauthorized("Invalid credentials") : Ok(new { Token  = token });
+            var userDto = await _userService.AuthenticateUserAsync(loginDto);
+            return userDto.Token == null ? Unauthorized("Invalid credentials") : Ok(userDto);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace YanKoltukBackend.Migrations
                     ManagerId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    AdminId = table.Column<int>(type: "int", nullable: true)
+                    AdminId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,7 +85,8 @@ namespace YanKoltukBackend.Migrations
                         name: "FK_Manager_Admin_AdminId",
                         column: x => x.AdminId,
                         principalTable: "Admin",
-                        principalColumn: "AdminId");
+                        principalColumn: "AdminId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Manager_User_UserId",
                         column: x => x.UserId,
@@ -135,17 +136,11 @@ namespace YanKoltukBackend.Migrations
                     StewardessPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StewardessPhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false),
-                    AdminId = table.Column<int>(type: "int", nullable: true)
+                    ManagerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Service", x => x.ServiceId);
-                    table.ForeignKey(
-                        name: "FK_Service_Admin_AdminId",
-                        column: x => x.AdminId,
-                        principalTable: "Admin",
-                        principalColumn: "AdminId");
                     table.ForeignKey(
                         name: "FK_Service_Manager_ManagerId",
                         column: x => x.ManagerId,
@@ -161,46 +156,17 @@ namespace YanKoltukBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceLog",
-                columns: table => new
-                {
-                    ServiceLogId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PickupTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    DropOffTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceLog", x => x.ServiceLogId);
-                    table.ForeignKey(
-                        name: "FK_ServiceLog_Service_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Service",
-                        principalColumn: "ServiceId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ServiceLog_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudentService",
                 columns: table => new
                 {
                     StudentServiceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Attended = table.Column<bool>(type: "bit", nullable: false),
-                    GetOff_GetOn = table.Column<int>(type: "int", nullable: false),
-                    DriverNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    DriverNote = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SortIndex = table.Column<int>(type: "int", nullable: false),
                     Direction = table.Column<int>(type: "int", nullable: true),
+                    ExcludedStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExcludedEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -218,6 +184,29 @@ namespace YanKoltukBackend.Migrations
                         column: x => x.StudentId,
                         principalTable: "Student",
                         principalColumn: "StudentId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServiceLog",
+                columns: table => new
+                {
+                    ServiceLogId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PickupTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    DropOffTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentServiceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceLog", x => x.ServiceLogId);
+                    table.ForeignKey(
+                        name: "FK_ServiceLog_StudentService_StudentServiceId",
+                        column: x => x.StudentServiceId,
+                        principalTable: "StudentService",
+                        principalColumn: "StudentServiceId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -254,11 +243,6 @@ namespace YanKoltukBackend.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Service_AdminId",
-                table: "Service",
-                column: "AdminId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Service_DriverIdNo",
                 table: "Service",
                 column: "DriverIdNo",
@@ -289,14 +273,9 @@ namespace YanKoltukBackend.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceLog_ServiceId",
+                name: "IX_ServiceLog_StudentServiceId",
                 table: "ServiceLog",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ServiceLog_StudentId",
-                table: "ServiceLog",
-                column: "StudentId");
+                column: "StudentServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Student_IdNo",

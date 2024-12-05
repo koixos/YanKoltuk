@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
 using YanKoltukBackend.Services.Interfaces;
 
@@ -51,7 +50,7 @@ namespace YanKoltukBackend.WebApi.Controllers
         }
 
         [HttpPut("editOrder")]
-        public async Task<IActionResult> UpdateStudentOrder([FromBody] List<StudentOrderDto> studentOrders)
+        public async Task<IActionResult> UpdateStudentOrder([FromBody] List<UpdateStudentOrderDto> studentOrders)
         {
             if (studentOrders == null || studentOrders.Count == 0)
                 return BadRequest("Invalid data");

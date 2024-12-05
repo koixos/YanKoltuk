@@ -13,7 +13,7 @@ namespace YanKoltukBackend.Services.Interfaces
         Task<ServiceResult<StudentService>> CreateStudentServiceAsync(Student student, int serviceId);
         Task<ServiceResult<StudentService>> UpdateStudentServiceAsync(UpdateStudentServiceDto updateStudenServicetDto, int studentId);
         Task<ServiceResult<StudentService>> UpdateNoteAsync(string note, int studentId);
-        Task<ServiceResult<StudentService>> UpdateStudentOrderAsync(List<StudentOrderDto> studentOrders);
+        Task<ServiceResult<bool>> UpdateStudentOrderAsync(List<UpdateStudentOrderDto> studentOrders);
         Task<ServiceResult<StudentService>> UpdateStudentStatusAsync(UpdateStudentStatusDto updateStudentStatusDto, int studentId);
         Task<ServiceResult<StudentService>> SetExcludedDatesAsync(ExcludedDateDto excludedDateDto, int studentId);
         Task<ServiceResult<StudentService>> DeleteStudentServiceAsync(int studentId);

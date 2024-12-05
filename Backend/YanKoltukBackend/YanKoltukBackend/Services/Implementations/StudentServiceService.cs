@@ -148,6 +148,25 @@ namespace YanKoltukBackend.Services.Implementations
                     await _hubContext.Clients.User(parentUserId)
                         .SendAsync("ReceiveNotification", $"{studentService.Student.Name} Durum: {_status.GetDescription()} ({_direction.GetDescription()}).");
 
+                if (_status == StudentStatus.GetOn && _direction == TripType.ToSchool)
+                {
+                    var nextStudentService = (await _studentServiceRepo
+                        .FindAsync(ss => ss.ServiceId == studentService.ServiceId && ss.SortIndex > studentService.SortIndex))
+                        .OrderBy(ss => ss.SortIndex)
+                        .FirstOrDefault();
+
+                    if (nextStudentService != null)
+                    {
+                        var nextParentId = nextStudentService.Student.ParentId;
+                        var nextParentUserId = (await _parentRepo.GetByIdAsync(nextParentId))?.UserId.ToString();
+                        if (nextParentUserId != null)
+                        {
+                            await _hubContext.Clients.User(nextParentUserId)
+                                .SendAsync("ReceiveNotification", "Hazırlanın, servis aracı evinize yaklaşmakta.");
+                        }
+                    }
+                }
+
                 return ServiceResult<StudentService>.SuccessResult(studentService);
             
             } catch (Exception ex)
@@ -156,19 +175,35 @@ namespace YanKoltukBackend.Services.Implementations
             }
         }
 
-        public async Task<ServiceResult> UpdateStudentOrderAsync(List<StudentOrderDto> studentOrders)
+        public async Task<ServiceResult<bool>> UpdateStudentOrderAsync(List<UpdateStudentOrderDto> studentOrdersDto)
         {
+            if (studentOrdersDto == null || studentOrdersDto.Count == 0)
+                return ServiceResult<bool>.ErrorResult("Error: Student orders list is empty.");
 
+            try
+            {
+                foreach (var studentOrderDto in studentOrdersDto)
+                {
+                    var studentService = (await _studentServiceRepo.FindAsync(ss => ss.StudentId == studentOrderDto.StudentId)).FirstOrDefault();
+                    if (studentService == null)
+                        return ServiceResult<bool>.ErrorResult("Error: Student not found - student id: " + studentOrderDto.StudentId);
+
+                    studentService.SortIndex = studentOrderDto.SortIndex;
+                    await _studentServiceRepo.UpdateAsync(studentService);
+                }
+
+                return ServiceResult<bool>.SuccessResult(true);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<bool>.ErrorResult("Error: StudentService not updated - " + ex.Message);
+            }
         }
 
         public async Task<ServiceResult<StudentService>> SetExcludedDatesAsync(ExcludedDateDto excludedDateDto, int studentId)
         {
             try
             {
-                var student = await _studentRepo.GetByIdAsync(studentId);
-                if (student == null)
-                    return ServiceResult<StudentService>.ErrorResult("Error: Student not found");
-
                 var studentService = (await _studentServiceRepo.FindAsync(ss => ss.StudentId == studentId)).FirstOrDefault();
                 if (studentService == null)
                     return ServiceResult<StudentService>.ErrorResult("Error: StudentService not found");
@@ -180,6 +215,22 @@ namespace YanKoltukBackend.Services.Implementations
                 studentService.ExcludedEndDate = excludedDateDto.EndDate;
 
                 await _studentServiceRepo.UpdateAsync(studentService);
+
+                var serviceId = studentService.ServiceId;
+                var serviceUserId = (await _serviceRepo.GetByIdAsync(serviceId))?.UserId.ToString();
+                if (serviceUserId != null)
+                {
+
+                    var student = await _studentRepo.GetByIdAsync(studentId);
+                    if (student == null)
+                        return ServiceResult<StudentService>.ErrorResult("Error: Student not found");
+
+                    if (studentService.ExcludedStartDate == studentService.ExcludedEndDate)
+                        await _hubContext.Clients.User(serviceUserId)
+                                .SendAsync("ReceiveNotification", $"{studentService.SortIndex} numaralı {student.Name} {studentService.ExcludedStartDate:dd.MM.yyyy} tarihinde izinlidir.");
+                    await _hubContext.Clients.User(serviceUserId)
+                                .SendAsync("ReceiveNotification", $"{studentService.SortIndex} numaralı {student.Name} {studentService.ExcludedStartDate:dd.MM.yyyy} - {studentService.ExcludedEndDate:dd.MM.yyyy} tarihleri aralığında izinlidir.");
+                }
 
                 return ServiceResult<StudentService>.SuccessResult(studentService, "Attendancy updated");
             }

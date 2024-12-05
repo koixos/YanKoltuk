@@ -1,5 +1,6 @@
 ﻿using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
+using YanKoltukBackend.Models.DTOs.SendDTOs;
 using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Services.Interfaces
@@ -8,7 +9,7 @@ namespace YanKoltukBackend.Services.Interfaces
     {
         Task<ServiceResult<int>> GetAdminIdAsync();
         Task<ServiceResult<Admin>> CreateAdminAsync();
-        Task<List<Manager>> GetAllManagersAsync(int adminId);
+        Task<ServiceResult<List<SendManagerDto>>> GetAllManagersAsync(int adminId);
         Task<ServiceResult<Manager>> AddManagerAsync(ManagerDto managerDto, int AdminId);
         Task<ServiceResult<Manager>> DeleteManagerAsync(int managerId);
     }
