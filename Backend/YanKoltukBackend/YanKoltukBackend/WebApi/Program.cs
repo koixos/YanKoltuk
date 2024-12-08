@@ -70,6 +70,14 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod()
                 .AllowCredentials();
     });
+
+    options.AddPolicy("AllowFlutterApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000", "http://127.0.0.1:56328")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+    });
 });
 
 var app = builder.Build();

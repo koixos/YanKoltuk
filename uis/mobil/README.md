@@ -1,6 +1,6 @@
-# android
+# mobil
 
-Flutter project for Yan Koltuk Mobile App
+A new Flutter project.
 
 ## Getting Started
 
