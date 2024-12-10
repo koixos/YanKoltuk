@@ -47,6 +47,18 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuer = false,
             ValidateAudience = false
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+                    context.Token = accessToken;
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
@@ -63,17 +75,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", builder =>
+    options.AddPolicy("AllowAllClients", builder =>
     {
-        builder.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
-    });
-
-    options.AddPolicy("AllowFlutterApp", builder =>
-    {
-        builder.WithOrigins("http://localhost:3000", "http://127.0.0.1:56328")
+        builder.WithOrigins("http://localhost:3000", "http://10.0.2.2")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
@@ -92,7 +96,7 @@ app.UseRouting();
 
 app.MapHub<NotificationHub>("/notificationHub");
 
-app.UseCors("AllowReactApp");
+app.UseCors("AllowAllClients");
 
 app.UseAuthentication();
 app.UseAuthorization();

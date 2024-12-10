@@ -1,4 +1,5 @@
 ﻿using YanKoltukBackend.Application.Results;
+using YanKoltukBackend.Models.Entities;
 
 namespace YanKoltukBackend.Services.Interfaces
 {

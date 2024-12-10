@@ -1,11 +1,11 @@
-class Parent {
+class ParentModel {
   final String name;
   final String idNo;
   final String phone;
   final String address;
   final String passwd;
 
-  Parent({
+  ParentModel({
     required this.name,
     required this.idNo,
     required this.phone,

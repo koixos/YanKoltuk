@@ -10,7 +10,6 @@ namespace YanKoltukBackend.Services.Interfaces
     {
         Task<ServiceResult<int>> GetParentIdAsync();
         Task<ServiceResult<Parent>> CreateParentAsync(ParentSignupDto parentSignupDto);
-        Task<List<Student>> GetAllStudentsAsync(int parentId);
         Task<Student?> GetStudentByIdAsync(int parentId, int studentId);
         Task<ServiceResult<Student>> AddStudentAsync(StudentDto studentDto, int parentId);
         Task<ServiceResult<Parent>> UpdateParentAsync(UpdateParentDto updateParentDto, int parentId);

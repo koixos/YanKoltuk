@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobil/src/views/login_page.dart';
+import 'package:mobil/src/views/parent_dashboard.dart';
+import 'package:mobil/src/views/service_dashboard.dart';
 //import 'package:mobil/src/views/login_page.dart';
 import 'package:mobil/src/views/signup_page.dart';
 
@@ -12,11 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/signup',
+      initialRoute: '/login',
       routes: {
-        //'/login': (context) => LoginPage(),
+        '/login': (context) => LoginPage(),
         '/signup': (context) => SignupPage(),
-        //'/parentDashboard': (context) => ParentDashboard(),
+        '/parentDashboard': (context) => ParentDashboard(),
         //'/serviceDashboard': (context) => ServiceDashboard(),
       },
     );

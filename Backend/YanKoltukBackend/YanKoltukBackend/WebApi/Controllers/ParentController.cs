@@ -18,16 +18,30 @@ namespace YanKoltukBackend.WebApi.Controllers
         public async Task<IActionResult> GetAllStudents()
         {
             int parentId = (await _parentService.GetParentIdAsync()).Data;
-            var students = await _parentService.GetAllStudentsAsync(parentId);
+            var students = await _studentServiceService.GetStudentsAsync(parentId);
             return Ok(students);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("plates")]
+        public async Task<IActionResult> GetAllServicePlates()
+        {
+            var plates = (await _studentServiceService.GetAllServicePlatesAsync()).Data;
+            return Ok(plates);
+        }
+
+        [HttpGet("student/{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
             int parentId = (await _parentService.GetParentIdAsync()).Data;
             var student = await _parentService.GetStudentByIdAsync(parentId, id);
             return student == null ? NotFound() : Ok(student);
+        }
+
+        [HttpGet("service/{plate}")]
+        public async Task<IActionResult> GetServiceIdByPlate(string plate)
+        {
+            var serviceId = await _studentServiceService.GetServiceIdByPlateAsync(plate);
+            return Ok(serviceId);
         }
 
         [HttpPost("addStudent")]
@@ -41,7 +55,8 @@ namespace YanKoltukBackend.WebApi.Controllers
                 if (student == null)
                     return BadRequest("Student is null");
 
-                var resultStudentService = await _studentServiceService.CreateStudentServiceAsync(student, studentDto.ServiceId);
+                var serviceId = (await _studentServiceService.GetServiceIdByPlateAsync(studentDto.Plate)).Data;
+                var resultStudentService = await _studentServiceService.CreateStudentServiceAsync(student, serviceId);
                 return resultStudentService.Success ? NoContent() : BadRequest(resultStudentService.Message);
             } else
             {

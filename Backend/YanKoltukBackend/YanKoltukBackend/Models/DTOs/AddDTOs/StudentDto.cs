@@ -5,6 +5,6 @@
         public required string IdNo { get; set; }
         public required string Name { get; set; }
         public required string SchoolNo { get; set; }
-        public required int ServiceId { get; set; }
+        public required string Plate { get; set; }
     }
 }

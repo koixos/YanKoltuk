@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Hubs;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
@@ -18,6 +19,40 @@ namespace YanKoltukBackend.Services.Implementations
         private readonly IRepository<StudentService> _studentServiceRepo = studentServiceRepo;
         private readonly IRepository<ServiceLog> _serviceLogRepo = serviceLogRepo;
         private readonly IHubContext<NotificationHub> _hubContext = hubContext;
+
+        public async Task<ServiceResult<IEnumerable<string?>>> GetAllServicePlatesAsync()
+        {
+            var services = await _serviceRepo.GetAllAsync();
+            if (services == null || !services.Any())
+                return ServiceResult<IEnumerable<string?>>.ErrorResult("No services found.");
+            var plates = services.Select(s => s.Plate).ToList();
+            return ServiceResult<IEnumerable<string?>>.SuccessResult(plates);
+        }
+
+        public async Task<ServiceResult<IEnumerable<StudentDto>>> GetStudentsAsync(int parentId)
+        {
+            var students = await _studentRepo.FindAsync(
+                s => s.ParentId == parentId,
+                include: s => s.Include(x => x.StudentService));
+
+            var studentDtos = students.Select(s => new StudentDto
+            {
+                IdNo = s.IdNo,
+                Name = s.Name,
+                SchoolNo = s.SchoolNo,
+                Plate = s.StudentService?.Service?.Plate
+            });
+
+            return ServiceResult<IEnumerable<StudentDto>>.SuccessResult(studentDtos);
+        }
+
+        public async Task<ServiceResult<int>> GetServiceIdByPlateAsync(string plate)
+        {
+            var service = (await _serviceRepo.FindAsync(s => s.Plate == plate)).FirstOrDefault();
+            if (service == null)
+                return ServiceResult<int>.ErrorResult("Service not found");
+            return ServiceResult<int>.SuccessResult(service.ServiceId);
+        }
 
         public async Task<IEnumerable<Student?>> GetAllStudentsAsync(int serviceId)
         {

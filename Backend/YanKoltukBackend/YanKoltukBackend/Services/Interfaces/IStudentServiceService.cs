@@ -7,6 +7,9 @@ namespace YanKoltukBackend.Services.Interfaces
 {
     public interface IStudentServiceService
     {
+        Task<ServiceResult<IEnumerable<string?>>> GetAllServicePlatesAsync();
+        Task<ServiceResult<IEnumerable<StudentDto>>> GetStudentsAsync(int parentId);
+        Task<ServiceResult<int>> GetServiceIdByPlateAsync(string plate);
         Task<IEnumerable<Student?>> GetAllStudentsAsync(int serviceId);
         Task<IEnumerable<Student?>> GetDrivingListAsync(int serviceId);
         Task<Student?> GetStudentByIdAsync(int serviceId, int studentId);

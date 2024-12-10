@@ -45,11 +45,6 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<Parent>.SuccessResult(parent, "Parent created");
         }
 
-        public async Task<List<Student>> GetAllStudentsAsync(int parentId)
-        {
-            return (await _studentRepo.FindAsync(s => s.ParentId == parentId)).ToList();
-        }
-
         public async Task<Student?> GetStudentByIdAsync(int parentId, int studentId)
         {
             return (await _studentRepo.FindAsync(s => (s.ParentId == parentId) && (s.StudentId == studentId))).FirstOrDefault();

@@ -48,6 +48,7 @@ namespace YanKoltukBackend.Services.Implementations
                 var managers = await _managerRepo.FindAsync(
                     m => m.AdminId == adminId,
                     include: query => query.Include(m => m.User));
+
                 var managerDtos = managers.Select(m => new SendManagerDto
                 {
                     ManagerId = m.ManagerId,

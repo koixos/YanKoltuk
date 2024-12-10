@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobil/src/models/parent_model.dart';
 import 'package:mobil/src/service/auth_service.dart';
+import 'package:mobil/src/views/login_page.dart';
 
 class SignupPage extends StatelessWidget {
   final AuthService _authService = AuthService();
@@ -14,18 +15,24 @@ class SignupPage extends StatelessWidget {
   final TextEditingController passwdController = TextEditingController();
 
   void _handleSignup(BuildContext context) async {
-    final name = nameController.text;
-    final idNo = idNoController.text;
-    final phone = phoneController.text;
-    final address = addressController.text;
-    final passwd = passwdController.text;
+    final parent = ParentModel(
+        name: nameController.text,
+        idNo: idNoController.text,
+        phone: phoneController.text,
+        address: addressController.text,
+        passwd: passwdController.text,
+    );
 
-    bool success = await _authService.signup(name, idNo, phone, address, passwd);
+    final response = await _authService.signup(parent);
 
-    if (success) {
+    if (response) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Kayıt başarılı!")),
+        const SnackBar(content: Text("Kayıt başarılı! Ana sayfaya yönlendiriliyorsunuz.")),
       );
+
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushNamed(context, '/parentDashboard');
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Kayıt başarısız. Tekrar deneyin.")),
@@ -62,8 +69,9 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 50),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
                     labelText: 'Ad Soyad',
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
@@ -75,8 +83,9 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: idNoController,
+                  decoration: const InputDecoration(
                     labelText: 'T.C Kimlik No',
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
@@ -88,8 +97,9 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: phoneController,
+                  decoration: const InputDecoration(
                     labelText: 'Telefon Numarası',
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
@@ -100,10 +110,10 @@ class SignupPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(
                     labelText: 'Adres',
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
@@ -115,9 +125,10 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const TextField(
+                TextField(
+                  controller: passwdController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Şifre',
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
@@ -130,27 +141,38 @@ class SignupPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {
-                  },
+                  onPressed: () => _handleSignup(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
                   ),
                   child: const Text('Kayıt Ol', style: TextStyle(color: Colors.white)),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Zaten bir hesabın var mı? Giriş yap.',
+                    style: TextStyle(color: Colors.lightBlue),
+                  ),
+                ),
               ],
             ),
             Visibility(
               visible: !isKeyboardVisible,
-              child: Positioned(
+              child: const Positioned(
                 top: 20,
                 left: 0,
                 right: 0,
                 child: Center(
-                  child: Image.asset(
+                  /*child: Image.asset(
                     'assets/signup.png',
                     width: 120,
                     height: 120,
-                  ),
+                  ),*/
                 ),
               ),
             ),
