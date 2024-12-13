@@ -12,7 +12,7 @@ using YanKoltukBackend.Data;
 namespace YanKoltukBackend.Migrations
 {
     [DbContext(typeof(YanKoltukDbContext))]
-    [Migration("20241203063945_InitialCreate")]
+    [Migration("20241213091250_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

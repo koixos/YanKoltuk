@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:mobil/src/api/api_client.dart';
 import 'package:mobil/src/api/endpoints.dart';
 import 'package:mobil/src/models/student_model.dart';
+import 'package:mobil/src/models/update_student_model.dart';
 import 'package:mobil/src/shared/secure_storage.dart';
 
 class ParentService {
@@ -24,7 +25,6 @@ class ParentService {
       final response = await _apiClient.get(
         Endpoints.getStudents
       );
-      print("TEST ${List<dynamic>.from(response.data["data"]["\$values"])}");
       List<dynamic> fetchedStudents = List<dynamic>.from(response.data["data"]["\$values"]);
       return fetchedStudents.where((e) => e != null).toList();
     } catch (e) {
@@ -41,6 +41,30 @@ class ParentService {
       return true;
     } catch (e) {
       log("Error adding student: $e");
+      return false;
+    }
+  }
+
+  Future<bool> editStudent(UpdateStudentModel updatedStudent, int studentId) async {
+    try {
+      await _apiClient.put(
+          Endpoints.editStudent(studentId), updatedStudent.toJson()
+      );
+      return true;
+    } catch (e) {
+      print("Error updating student: $e");
+      return false;
+    }
+  }
+
+  Future<bool> deleteStudent(int studentId) async {
+    try {
+      await _apiClient.delete(
+          Endpoints.deleteStudent(studentId)
+      );
+      return true;
+    } catch (e) {
+      print("Error deleting student: $e");
       return false;
     }
   }
@@ -87,101 +111,6 @@ class ParentService {
     );
   }
 
-  void _editStudent(Student student) {
-    String selectedEditPlate = student.plateNumber;
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text("Servis Plakası Güncelle"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Diğer bilgilerin sadece okunabilir olarak gösterimi
-                  TextField(
-                    decoration: const InputDecoration(labelText: "İsim Soyisim"),
-                    controller: TextEditingController(text: student.name),
-                    readOnly: true,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(labelText: "Öğrenci Numarası"),
-                    controller: TextEditingController(text: student.studentNumber),
-                    readOnly: true,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(labelText: "TC Kimlik Numarası"),
-                    controller: TextEditingController(text: student.tcNumber),
-                    readOnly: true,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text("Servis Plakasını Güncelle:"),
-                  DropdownButton<String>(
-                    value: selectedEditPlate,
-                    onChanged: (String? newValue) {
-                      setDialogState(() {
-                        selectedEditPlate = newValue!;
-                      });
-                    },
-                    items: servicePlates.map<DropdownMenuItem<String>>((String plate) {
-                      return DropdownMenuItem<String>(
-                        value: plate,
-                        child: Text(plate),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      student.plateNumber = selectedEditPlate;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Kaydet"),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("İptal"),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _deleteStudent(Student student) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Öğrenci Sil"),
-          content: Text("${student.name} isimli öğrenci silinecek. Onaylıyor musunuz?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  students.remove(student);
-                });
-                Navigator.pop(context);
-              },
-              child: const Text("Evet"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Hayır"),
-            ),
-          ],
-        );
-      },
-    );
-  }
    */
 }

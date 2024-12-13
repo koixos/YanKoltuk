@@ -199,7 +199,7 @@ const AddService = () => {
 
                             <div className="button-container">
                                 <button type="submit" className="submit">
-                                    <span className="btnText">Submit</span>
+                                    <span className="btnText">Kaydet</span>
                                     <i className="uil uil-navigator"></i>
                                 </button>
                             </div>

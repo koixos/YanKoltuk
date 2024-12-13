@@ -27,11 +27,11 @@ class SignupPage extends StatelessWidget {
 
     if (response) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Kayıt başarılı! Ana sayfaya yönlendiriliyorsunuz.")),
+        const SnackBar(content: Text("Kayıt başarılı! Giriş yapabilirsiniz.")),
       );
 
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushNamed(context, '/parentDashboard');
+        Navigator.pushNamed(context, '/login');
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

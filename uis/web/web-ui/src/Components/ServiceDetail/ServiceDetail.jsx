@@ -110,6 +110,11 @@ function ServiceDetail({ service, onBack, onEdit }) {
                 </div>
                 <div className="items-body" id="servicedetail-items-body">
                     <div className="items-body-content" id="servicedetail-items-body-content">
+                    <div className="row">
+                            <div className="col-sm-3"><h6 className="mb-0">Servis ID:</h6></div>
+                            <div className="col-sm-9 text-secondary"> {service.serviceId} </div>
+                            <hr />
+                        </div>
                         <div className="row">
                             <div className="col-sm-3"><h6 className="mb-0">Plaka:</h6></div>
                             <div className="col-sm-9 text-secondary"> {service.plate} </div>

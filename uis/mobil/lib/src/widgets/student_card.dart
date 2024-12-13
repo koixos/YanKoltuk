@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobil/src/models/student_model.dart';
+import 'package:mobil/src/models/student_service_model.dart';
+
+import 'calendar_page.dart';
 
 class StudentCard extends StatelessWidget {
-  final StudentModel student;
+  final StudentServiceModel student;
   final ValueChanged<bool> onStatusChanged;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -21,7 +24,7 @@ class StudentCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       child: Padding(
-        padding: const EdgeInsets.all(20), // Kartın yüksekliği artırıldı
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             Row(
@@ -35,21 +38,21 @@ class StudentCard extends StatelessWidget {
                         student.name,
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 5), // İsim ve status arasında boşluk
-                      /*Row(
+                      const SizedBox(height: 5),
+                      Row(
                         children: [
                           Icon(
                             Icons.circle,
-                            color: student.status == 'Servisten İndi' ? Colors.green : Colors.red,
+                            color: student.status == 'İndi' ? Colors.green : Colors.red,
                             size: 10,
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            student.status, // Status bilgisi isim altında
+                            student.status,
                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ],
-                      ),*/
+                      ),
                       const SizedBox(height: 10),
                       Text(
                         "Servis: ${student.plate}",
@@ -58,7 +61,7 @@ class StudentCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                /*Column(
+                Column(
                   children: [
                     ElevatedButton(
                       onPressed: () async {
@@ -70,7 +73,6 @@ class StudentCard extends StatelessWidget {
                         );
 
                         if (selectedDate != null) {
-                          // Seçilen tarih kullanılarak işlem yapılabilir.
                           print("Seçilen tarih: $selectedDate");
                         }
                       },
@@ -83,8 +85,7 @@ class StudentCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),*/
-                // Üç nokta menüsü sağ tarafa alındı
+                ),
                 PopupMenuButton<String>(
                   onSelected: (String value) {
                     if (value == "edit") {
@@ -96,11 +97,11 @@ class StudentCard extends StatelessWidget {
                   itemBuilder: (BuildContext context) => [
                     const PopupMenuItem(
                       value: "edit",
-                      child: Text("Öğrenci Servisini Düzenle"),
+                      child: Text("Düzenle"),
                     ),
                     const PopupMenuItem(
                       value: "delete",
-                      child: Text("Öğrenci Sil"),
+                      child: Text("Sil"),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),

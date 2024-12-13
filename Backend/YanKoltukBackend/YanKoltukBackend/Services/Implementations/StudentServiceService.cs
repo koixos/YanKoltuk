@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Hubs;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
+using YanKoltukBackend.Models.DTOs.SendDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
 using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Repositories.Interfaces;
@@ -29,21 +30,29 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<IEnumerable<string?>>.SuccessResult(plates);
         }
 
-        public async Task<ServiceResult<IEnumerable<StudentDto>>> GetStudentsAsync(int parentId)
+        public async Task<ServiceResult<IEnumerable<SendStudentDto>>> GetStudentsAsync(int parentId)
         {
             var students = await _studentRepo.FindAsync(
                 s => s.ParentId == parentId,
-                include: s => s.Include(x => x.StudentService));
+                include: s => s.Include(x => x.StudentService)
+                                .ThenInclude(ss => ss.Service));
 
-            var studentDtos = students.Select(s => new StudentDto
+            var studentDtos = students.Select(s => new SendStudentDto
             {
+                StudentId = s.StudentId,
                 IdNo = s.IdNo,
                 Name = s.Name,
                 SchoolNo = s.SchoolNo,
-                Plate = s.StudentService?.Service?.Plate
+                Plate = s.StudentService.Service.Plate,
+                Status = s.StudentService.Status.GetDescription(),
+                DriverNote = s.StudentService.DriverNote,
+                SortIndex = s.StudentService.SortIndex,
+                Direction = s.StudentService.Direction?.GetDescription(),
+                ExcludedStartDate = s.StudentService.ExcludedStartDate,
+                ExcludedEndDate = s.StudentService.ExcludedEndDate,
             });
 
-            return ServiceResult<IEnumerable<StudentDto>>.SuccessResult(studentDtos);
+            return ServiceResult<IEnumerable<SendStudentDto>>.SuccessResult(studentDtos);
         }
 
         public async Task<ServiceResult<int>> GetServiceIdByPlateAsync(string plate)
@@ -52,6 +61,14 @@ namespace YanKoltukBackend.Services.Implementations
             if (service == null)
                 return ServiceResult<int>.ErrorResult("Service not found");
             return ServiceResult<int>.SuccessResult(service.ServiceId);
+        }
+
+        public async Task<ServiceResult<string>> GetServicePlateByIdAsync(int serviceId)
+        {
+            var service = (await _serviceRepo.FindAsync(s => s.ServiceId == serviceId)).FirstOrDefault();
+            if (service == null)
+                return ServiceResult<string>.ErrorResult("Service not found");
+            return ServiceResult<string>.SuccessResult(service.Plate);
         }
 
         public async Task<IEnumerable<Student?>> GetAllStudentsAsync(int serviceId)
@@ -94,7 +111,7 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<StudentService>.SuccessResult(studentService, "StudentService added");
         }
 
-        public async Task<ServiceResult<StudentService>> UpdateStudentServiceAsync(UpdateStudentServiceDto updateStudentServiceDto, int studentId)
+        public async Task<ServiceResult<StudentService>> UpdateStudentServiceAsync(int serviceId, int studentId)
         {
             try
             {
@@ -102,7 +119,7 @@ namespace YanKoltukBackend.Services.Implementations
                 if (student == null)
                     return ServiceResult<StudentService>.ErrorResult("Error: Student not found");
 
-                var service = await _serviceRepo.GetByIdAsync(updateStudentServiceDto.ServiceId);
+                var service = await _serviceRepo.GetByIdAsync(serviceId);
                 if (service == null)
                     return ServiceResult<StudentService>.ErrorResult("Error: Service not found");
 
@@ -110,7 +127,7 @@ namespace YanKoltukBackend.Services.Implementations
                 if (studentService == null)
                     return ServiceResult<StudentService>.ErrorResult("Error: StudentService not found");
 
-                studentService.ServiceId = updateStudentServiceDto.ServiceId;
+                studentService.ServiceId = serviceId;
                 await _studentServiceRepo.UpdateAsync(studentService);
 
                 return ServiceResult<StudentService>.SuccessResult(studentService, "StudentService updated");

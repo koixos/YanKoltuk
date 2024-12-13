@@ -2,6 +2,6 @@
 {
     public class UpdateStudentServiceDto
     {
-        public int ServiceId { get; set; }
+        public string Plate { get; set; }
     }
 }

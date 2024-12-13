@@ -5,16 +5,16 @@ import { useState } from 'react';
 function ManagerDashboard() {
     const [cards] = useState([
         {
-            title: "Add Service",
-            text: `Register a service to the system.`,
+            title: "Servis Ekle",
+            text: `Sisteme bir servis kaydet.`,
             link: "/add-service"
         }, {
-            title: "View Services",
-            text: `View the registered services as a list.`,
+            title: "Servis Listesi",
+            text: `Kayıtlı tüm servisleri görüntüle.`,
             link: "/view-services"
         }, {
-            title: "View Service Logs",
-            text: `View the movements of the registered services.`,
+            title: "Servis Raporları",
+            text: `Servislerin hareket detaylarını görüntüle.`,
             link: "/service-logs"
         },
     ]);
@@ -23,7 +23,7 @@ function ManagerDashboard() {
         <div className="home">
             <section className="section">
                 <div className="container">
-                    <h1 className="welcome">Welcome to Yan Koltuk!</h1>
+                    <h1 className="welcome">Yan Koltuk'a Hoş Geldiniz!</h1>
                     <div className="cards">
                         {
                             cards.map((card, i) => (

@@ -77,11 +77,14 @@ namespace YanKoltukBackend.WebApi.Controllers
         {
             int parentId = (await _parentService.GetParentIdAsync()).Data;
 
-            var student = _parentService.GetStudentByIdAsync(parentId, id);
+            var student = await _parentService.GetStudentByIdAsync(parentId, id);
             if (student == null)
                 return BadRequest("Student not found");
 
-            var result = await _studentServiceService.UpdateStudentServiceAsync(updateStudentServiceDto, id);
+            var serviceId = (await _studentServiceService.GetServiceIdByPlateAsync(updateStudentServiceDto.Plate)).Data;
+
+            var result = await _studentServiceService.UpdateStudentServiceAsync(serviceId, id);
+
             return result.Success ? NoContent() : BadRequest(result.Message);
         }
 

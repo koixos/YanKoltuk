@@ -67,7 +67,7 @@ const ViewServices = () => {
                                         class="items-body-content"
                                         id="viewlist-items-body-content"
                                     >
-                                        <span> {index + 1}) {item.serviceId}: {item.plate} - {item.driverName} </span>
+                                        <span> {index + 1}) {item.plate} - {item.driverName} </span>
                                         <i class="fa fa-angle-right"></i>
                                     </div>
                                 ))

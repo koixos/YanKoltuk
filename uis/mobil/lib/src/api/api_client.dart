@@ -63,9 +63,9 @@ class ApiClient {
     }
   }
 
-  Future<Response> delete(String endpoint, Map<String, dynamic> data) async {
+  Future<Response> delete(String endpoint) async {
     try {
-      return await _dio.delete(endpoint, data: data);
+      return await _dio.delete(endpoint);
     } on DioException catch (e) {
       if (e.response != null) {
         throw Exception("DELETE failed: ${e.response?.data}");
