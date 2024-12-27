@@ -1,0 +1,48 @@
+#navbar {
+  align-items: center;
+  justify-content: center;
+  background-color: #3f51b5;
+}
+
+#navbar button {
+  color: #f5f5f5;
+  border: none;
+}
+
+#navbar button:active {
+  transform: scale(0.98); 
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+}
+
+#navbar .id-no {
+  color: #f5f5f5;
+  padding-right: 20px;
+  padding-top: 18px;
+}
+
+#sign-out-btn {
+  padding-bottom: 4px;
+}
+
+#sign-out-btn button {
+  background-color: #f5f5f5;
+}
+
+#sign-out-btn i {
+  color: #3f51b5;
+}
+
+#sign-out-btn button:hover {
+  background-color: #fff  ;
+}
+
+@media(max-width: 991.98px) {
+  .id-no {
+    padding-right: 0;
+    padding-top: 10px;
+  }
+
+  #btn {
+    padding-bottom: 0;
+  }
+}
