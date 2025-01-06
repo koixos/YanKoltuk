@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobil/src/views/login_page.dart';
-import 'package:mobil/src/views/parent_dashboard.dart';
-import 'package:mobil/src/views/service_dashboard.dart';
-import 'package:mobil/src/views/service_student_list.dart';
-//import 'package:mobil/src/views/login_page.dart';
-import 'package:mobil/src/views/signup_page.dart';
+import 'package:mobil/src/views/parent_views/parent_dashboard.dart';
+import 'package:mobil/src/views/service_views/service_dashboard.dart';
+import 'package:mobil/src/views/service_views/service_student_list.dart';
+import 'package:mobil/src/views/parent_views/signup_page.dart';
 
 void main() {
   runApp(const MyApp());

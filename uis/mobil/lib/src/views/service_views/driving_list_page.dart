@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobil/src/models/update_student_status_model.dart';
-import 'package:mobil/src/views/service_dashboard.dart';
+import 'package:mobil/src/views/service_views/service_dashboard.dart';
 
-import '../models/student_service_model.dart';
-import '../service/service_service.dart';
+import '../../models/student_service_model.dart';
+import '../../service/service_service.dart';
 
 class DrivingListPage extends StatefulWidget {
   final int tripType;
@@ -71,14 +71,21 @@ class _DrivingListPageState extends State<DrivingListPage> {
 
   String _getTripType() {
     if (widget.tripType == 0) {
-      return "Okula Gidiş";
+      return "ToSchool";
     } else {
-      return "Okuldan Dönüş";
+      return "FromSchool";
     }
   }
 
   bool _isAttending(StudentServiceModel student) {
-    return !(student.excludedStartDate != null && student.excludedEndDate != null);
+    DateTime today = DateTime.now();
+
+    if (student.excludedStartDate == null && student.excludedEndDate == null) {
+      return true;
+    } else if (onlyDate(student.excludedStartDate!) == onlyDate(today) || onlyDate(student.excludedEndDate!) == onlyDate(today)) {
+      return false;
+    }
+    return !(student.excludedStartDate!.isBefore(today) && student.excludedEndDate!.isAfter(today));
   }
 
   int _getTotalAttending() {
@@ -96,6 +103,10 @@ class _DrivingListPageState extends State<DrivingListPage> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+  }
+
+  DateTime onlyDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
   
   @override
@@ -170,18 +181,18 @@ class _DrivingListPageState extends State<DrivingListPage> {
                         ],
                       ),
                       Switch(
-                        value: student.status == "indi",
+                        value: student.status == "GetOff",
                         onChanged: !_isAttending(student)
                             ? null
                             : (value) async {
                                 setState(() {
-                                  student.status = value ? "indi" : "bindi";
+                                  student.status = value ? "GetOff" : "GetOn";
                                 });
                                 await _handleUpdateStudentStatus(student.studentId, student.status);
                                 if (value) {
                                   _scrollToStudent(index);
                                 }
-                        },
+                            },
                       ),
                     ],
                   ),

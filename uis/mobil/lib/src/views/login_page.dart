@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobil/src/models/login_model.dart';
 import 'package:mobil/src/service/auth_service.dart';
-import 'package:mobil/src/views/parent_dashboard.dart';
-import 'package:mobil/src/views/service_dashboard.dart';
+import 'package:mobil/src/views/parent_views/parent_dashboard.dart';
+import 'package:mobil/src/views/service_views/service_dashboard.dart';
 import '../shared/secure_storage.dart';
-import 'signup_page.dart';
+import './parent_views/signup_page.dart';
 
 class LoginPage extends StatelessWidget {
   final AuthService _authService = AuthService();

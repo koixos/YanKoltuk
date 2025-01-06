@@ -39,7 +39,6 @@ class ServiceService {
       final response = await _apiClient.get(
           Endpoints.getDrivingList
       );
-      print(response.data);
       return response.data["data"]["\$values"];
     } catch (e) {
       log("Error fetching students: $e");
@@ -74,10 +73,11 @@ class ServiceService {
 
   Future<bool> updateStatus(int studentId, UpdateStudentStatusModel updatedStudent) async {
     try {
-      await _apiClient.put(
+      final response = await _apiClient.put(
         Endpoints.updateStudentStatus(studentId),
         updatedStudent.toJson(),
       );
+      print(updatedStudent.toJson());
       return true;
     } catch (e) {
       print("Error updating student status: $e");

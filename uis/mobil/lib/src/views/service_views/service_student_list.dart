@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mobil/src/models/student_service_model.dart';
 import 'package:mobil/src/models/update_driver_note_model.dart';
 import 'package:mobil/src/models/update_student_order_model.dart';
-import 'package:mobil/src/views/service_dashboard.dart';
+import 'package:mobil/src/views/service_views/service_dashboard.dart';
 
-import '../service/service_service.dart';
+import '../../service/service_service.dart';
 
 class ServiceStudentList extends StatefulWidget {
   final int capacity;

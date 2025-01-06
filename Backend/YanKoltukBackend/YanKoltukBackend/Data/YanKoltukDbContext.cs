@@ -72,42 +72,42 @@ namespace YanKoltukBackend.Data
                 .HasOne(m => m.Admin)
                 .WithMany(a => a.Managers)
                 .HasForeignKey(m => m.AdminId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Manager-Service Relationships
             modelBuilder.Entity<Service>()
                 .HasOne(s => s.Manager)
                 .WithMany(m => m.Services)
                 .HasForeignKey(s => s.ManagerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Student-StudentService Relationship
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.StudentService)
                 .WithOne(ss => ss.Student)
                 .HasForeignKey<StudentService>(ss => ss.StudentId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Service-StudentService Relationship
-            modelBuilder.Entity<Service>()
-                .HasMany(s => s.StudentServices)
-                .WithOne(ss => ss.Service)
+            modelBuilder.Entity<StudentService>()
+                .HasOne(ss => ss.Service)
+                .WithMany(s => s.StudentServices)
                 .HasForeignKey(ss => ss.ServiceId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // StudentService-ServiceLog Relationships
-            modelBuilder.Entity<StudentService>()
-                .HasMany(ss => ss.ServiceLogs)
-                .WithOne(sl => sl.StudentService)
+            modelBuilder.Entity<ServiceLog>()
+                .HasOne(sl => sl.StudentService)
+                .WithMany(ss => ss.ServiceLogs)
                 .HasForeignKey(sl => sl.StudentServiceId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Parent-ParentNotification Relationships
             modelBuilder.Entity<ParentNotification>()
                 .HasOne(pf => pf.Parent)
                 .WithMany(p => p.Notifications)
                 .HasForeignKey(pf => pf.ParentId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

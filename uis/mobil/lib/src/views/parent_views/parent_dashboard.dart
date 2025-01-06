@@ -8,7 +8,7 @@ import 'package:mobil/src/shared/secure_storage.dart';
 import 'package:mobil/src/views/login_page.dart';
 import 'package:mobil/src/widgets/calendar_page.dart';
 
-import '../widgets/student_card.dart';
+import '../../widgets/student_card.dart';
 
 class ParentDashboard extends StatefulWidget {
   const ParentDashboard({super.key});

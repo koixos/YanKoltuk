@@ -40,6 +40,7 @@ class ParentService {
         Endpoints.getStudents
       );
       List<dynamic> fetchedStudents = List<dynamic>.from(response.data["data"]["\$values"]);
+      print(fetchedStudents);
       return fetchedStudents.where((e) => e != null).toList();
     } catch (e) {
       log("Error fetching students: $e");

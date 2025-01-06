@@ -86,7 +86,7 @@ namespace YanKoltukBackend.Migrations
                         column: x => x.AdminId,
                         principalTable: "Admin",
                         principalColumn: "AdminId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Manager_User_UserId",
                         column: x => x.UserId,
@@ -115,7 +115,7 @@ namespace YanKoltukBackend.Migrations
                         column: x => x.ParentId,
                         principalTable: "Parent",
                         principalColumn: "ParentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,7 +169,7 @@ namespace YanKoltukBackend.Migrations
                         column: x => x.ManagerId,
                         principalTable: "Manager",
                         principalColumn: "ManagerId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Service_User_UserId",
                         column: x => x.UserId,
@@ -190,7 +190,7 @@ namespace YanKoltukBackend.Migrations
                     Direction = table.Column<int>(type: "int", nullable: true),
                     ExcludedStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ExcludedEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: true),
                     StudentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -201,13 +201,13 @@ namespace YanKoltukBackend.Migrations
                         column: x => x.ServiceId,
                         principalTable: "Service",
                         principalColumn: "ServiceId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_StudentService_Student_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Student",
                         principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,7 +220,7 @@ namespace YanKoltukBackend.Migrations
                     PickupTime = table.Column<TimeSpan>(type: "time", nullable: true),
                     DropOffTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     Direction = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudentServiceId = table.Column<int>(type: "int", nullable: false)
+                    StudentServiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,7 +230,7 @@ namespace YanKoltukBackend.Migrations
                         column: x => x.StudentServiceId,
                         principalTable: "StudentService",
                         principalColumn: "StudentServiceId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobil/src/service/service_service.dart';
-import 'package:mobil/src/views/driving_list_page.dart';
-import 'package:mobil/src/views/service_student_list.dart';
+import 'package:mobil/src/views/service_views/driving_list_page.dart';
+import 'package:mobil/src/views/service_views/service_student_list.dart';
 
-import '../shared/secure_storage.dart';
-import 'login_page.dart';
+import '../../shared/secure_storage.dart';
+import '../login_page.dart';
 
 class ServiceDashboard extends StatefulWidget {
   const ServiceDashboard({super.key});

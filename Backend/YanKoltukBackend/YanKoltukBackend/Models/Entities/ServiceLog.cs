@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace YanKoltukBackend.Models.Entities
 {
@@ -11,9 +10,8 @@ namespace YanKoltukBackend.Models.Entities
         public TimeSpan DropOffTime { get; set; }
         public string? Direction { get; set; }
 
-        [Required]
         [ForeignKey("StudentService")]
-        public int StudentServiceId { get; set; }
+        public int? StudentServiceId { get; set; }
         public StudentService? StudentService { get; set; }
     }
 }

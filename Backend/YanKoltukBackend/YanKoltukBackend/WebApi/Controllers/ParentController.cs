@@ -133,16 +133,10 @@ namespace YanKoltukBackend.WebApi.Controllers
             if (student == null)
                 return BadRequest("Student not found");
 
-            var resultStudentService = await _studentServiceService.DeleteStudentServiceAsync(id);
 
-            if (resultStudentService.Success)
-            {
-                var result = await _parentService.DeleteStudentAsync(parentId, id);
-                return result.Success ? NoContent() : BadRequest(result.Message);
-            } else
-            {
-                return BadRequest(resultStudentService.Message);
-            }
+            var result = await _studentServiceService.DeleteStudentAsync(parentId, id);
+            return result.Success ? NoContent() : BadRequest(result.Message);
+            
         }
     }
 }

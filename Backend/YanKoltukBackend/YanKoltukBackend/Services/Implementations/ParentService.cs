@@ -122,20 +122,6 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 return ServiceResult<Parent>.ErrorResult("Error: Parent not updated - " + ex.InnerException?.Message);
             }
-        }
-        
-        public async Task<ServiceResult<Student>> DeleteStudentAsync(int parentId, int studentId)
-        {
-            var parent = await _parentRepo.GetByIdAsync(parentId);
-            if (parent == null)
-                return ServiceResult<Student>.ErrorResult("Error: Parent not found");
-
-            var student = await _studentRepo.GetByIdAsync(studentId);
-            if (student == null)
-                return ServiceResult<Student>.ErrorResult("Error: Student not found");
-
-            await _studentRepo.DeleteAsync(student);
-            return ServiceResult<Student>.SuccessResult(student);
-        }
+        }      
     }
 }

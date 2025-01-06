@@ -12,7 +12,7 @@ using YanKoltukBackend.Data;
 namespace YanKoltukBackend.Migrations
 {
     [DbContext(typeof(YanKoltukDbContext))]
-    [Migration("20241218184814_InitialCreate")]
+    [Migration("20250104084249_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -228,7 +228,7 @@ namespace YanKoltukBackend.Migrations
                     b.Property<TimeSpan?>("PickupTime")
                         .HasColumnType("time");
 
-                    b.Property<int>("StudentServiceId")
+                    b.Property<int?>("StudentServiceId")
                         .HasColumnType("int");
 
                     b.HasKey("ServiceLogId");
@@ -295,7 +295,7 @@ namespace YanKoltukBackend.Migrations
                     b.Property<DateTime?>("ExcludedStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int?>("ServiceId")
                         .HasColumnType("int");
 
                     b.Property<int>("SortIndex")
@@ -365,7 +365,7 @@ namespace YanKoltukBackend.Migrations
                     b.HasOne("YanKoltukBackend.Models.Entities.Admin", "Admin")
                         .WithMany("Managers")
                         .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("YanKoltukBackend.Models.Entities.User", "User")
@@ -395,7 +395,7 @@ namespace YanKoltukBackend.Migrations
                     b.HasOne("YanKoltukBackend.Models.Entities.Parent", "Parent")
                         .WithMany("Notifications")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Parent");
@@ -406,7 +406,7 @@ namespace YanKoltukBackend.Migrations
                     b.HasOne("YanKoltukBackend.Models.Entities.Manager", "Manager")
                         .WithMany("Services")
                         .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("YanKoltukBackend.Models.Entities.User", "User")
@@ -425,8 +425,7 @@ namespace YanKoltukBackend.Migrations
                     b.HasOne("YanKoltukBackend.Models.Entities.StudentService", "StudentService")
                         .WithMany("ServiceLogs")
                         .HasForeignKey("StudentServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("StudentService");
                 });
@@ -447,13 +446,12 @@ namespace YanKoltukBackend.Migrations
                     b.HasOne("YanKoltukBackend.Models.Entities.Service", "Service")
                         .WithMany("StudentServices")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("YanKoltukBackend.Models.Entities.Student", "Student")
                         .WithOne("StudentService")
                         .HasForeignKey("YanKoltukBackend.Models.Entities.StudentService", "StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Service");

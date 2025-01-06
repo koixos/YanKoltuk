@@ -17,5 +17,4 @@ class Endpoints {
   static const updateStudentOrder = "/service/editOrder";
   static String editNote(int id) => "/service/editNote/$id";
   static String updateStudentStatus(int id) => "/service/updateStatus/$id";
-
 }

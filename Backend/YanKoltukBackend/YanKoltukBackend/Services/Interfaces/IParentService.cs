@@ -14,6 +14,5 @@ namespace YanKoltukBackend.Services.Interfaces
         Task<Student?> GetStudentByIdAsync(int parentId, int studentId);
         Task<ServiceResult<Student>> AddStudentAsync(StudentDto studentDto, int parentId);
         Task<ServiceResult<Parent>> UpdateParentAsync(UpdateParentDto updateParentDto, int parentId);
-        Task<ServiceResult<Student>> DeleteStudentAsync(int parentId, int studentId);
     }
 }

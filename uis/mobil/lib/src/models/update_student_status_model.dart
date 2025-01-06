@@ -1,6 +1,6 @@
 class UpdateStudentStatusModel {
-  String status;
-  String direction;
+  final String status;
+  final String direction;
 
   UpdateStudentStatusModel({
     required this.status,

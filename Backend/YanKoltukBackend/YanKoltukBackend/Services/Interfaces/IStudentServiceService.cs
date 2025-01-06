@@ -13,7 +13,7 @@ namespace YanKoltukBackend.Services.Interfaces
         Task<ServiceResult<int>> GetServiceIdByPlateAsync(string plate);
         Task<ServiceResult<string>> GetServicePlateByIdAsync(int serviceId);
         Task<ServiceResult<IEnumerable<SendServiceStudentDto>>> GetAllStudentsAsync(int serviceId);
-        Task<IEnumerable<Student?>> GetDrivingListAsync(int serviceId);
+        Task<ServiceResult<IEnumerable<SendServiceStudentDto>>> GetDrivingListAsync(int serviceId);
         Task<Student?> GetStudentByIdAsync(int serviceId, int studentId);
         Task<ServiceResult<List<DateTime>>?> GetExcludedDates(int studentId);
         Task<ServiceResult<StudentService>> CreateStudentServiceAsync(Student student, int serviceId);
@@ -22,7 +22,7 @@ namespace YanKoltukBackend.Services.Interfaces
         Task<ServiceResult<bool>> UpdateStudentOrderAsync(List<UpdateStudentOrderDto> studentOrders);
         Task<ServiceResult<StudentService>> UpdateStudentStatusAsync(UpdateStudentStatusDto updateStudentStatusDto, int studentId);
         Task<ServiceResult<StudentService>> SetExcludedDatesAsync(ExcludedDateDto excludedDateDto, int studentId);
+        Task<ServiceResult<Student>> DeleteStudentAsync(int parentId, int studentId);
         Task<ServiceResult<StudentService>> DeleteStudentServiceAsync(int studentId);
-        //Task<ServiceResult<StudentService>> RemoveExcludedDatesAsync(ExcludedDateDto excludedDateDto, int studentId);
     }
 }

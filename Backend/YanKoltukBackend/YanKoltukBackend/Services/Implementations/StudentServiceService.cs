@@ -44,7 +44,7 @@ namespace YanKoltukBackend.Services.Implementations
                 IdNo = s.IdNo,
                 Name = s.Name,
                 SchoolNo = s.SchoolNo,
-                Plate = s.StudentService.Service.Plate,
+                Plate = s.StudentService.Service?.Plate,
                 Status = s.StudentService.Status.GetDescription(),
                 ExcludedStartDate = s.StudentService.ExcludedStartDate,
                 ExcludedEndDate = s.StudentService.ExcludedEndDate,
@@ -87,10 +87,10 @@ namespace YanKoltukBackend.Services.Implementations
                 ParentPhone = ss.Student.Parent.Phone,
                 Address = ss.Student.Parent.Address,
                 Plate = ss.Service.Plate,
-                Status = "ss.Status.GetDescription()",
+                Status = ss.Status.GetDescription(),
                 DriverNote = ss.DriverNote,
                 SortIndex = ss.SortIndex,
-                Direction = "ss.Direction.GetDescription()",
+                Direction = ss.Direction.GetDescription(),
                 ExcludedStartDate = ss.ExcludedStartDate,
                 ExcludedEndDate = ss.ExcludedEndDate,
             });
@@ -98,10 +98,37 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<IEnumerable<SendServiceStudentDto>>.SuccessResult(studentServiceDtos);
         }
 
-        public async Task<IEnumerable<Student?>> GetDrivingListAsync(int serviceId)
+        public async Task<ServiceResult<IEnumerable<SendServiceStudentDto>>> GetDrivingListAsync(int serviceId)
         {
             var today = DateTime.Today;
-            return (await _studentRepo.FindAsync(s => (s.StudentService.ServiceId == serviceId) && !((s.StudentService.ExcludedStartDate <= today) && (s.StudentService.ExcludedEndDate >= today)))).ToList();
+
+            var studentServices = await _studentServiceRepo.FindAsync(
+                ss => ss.ServiceId == serviceId &&
+                        !(ss.ExcludedStartDate != null && ss.ExcludedEndDate != null &&
+                        ss.ExcludedStartDate <= today && ss.ExcludedEndDate >= today),
+                include: ss => ss.Include(x => x.Student)
+                                .ThenInclude(s => s.Parent)
+                                .Include(x => x.Service));
+
+            var studentServiceDtos = studentServices.Select(ss => new SendServiceStudentDto
+            {
+                StudentId = ss.Student.StudentId,
+                IdNo = ss.Student.IdNo,
+                Name = ss.Student.Name,
+                SchoolNo = ss.Student.SchoolNo,
+                ParentName = ss.Student.Parent.Name,
+                ParentPhone = ss.Student.Parent.Phone,
+                Address = ss.Student.Parent.Address,
+                Plate = ss.Service.Plate,
+                Status = ss.Status.GetDescription(),
+                DriverNote = ss.DriverNote,
+                SortIndex = ss.SortIndex,
+                Direction = ss.Direction.GetDescription(),
+                ExcludedStartDate = ss.ExcludedStartDate,
+                ExcludedEndDate = ss.ExcludedEndDate,
+            });
+
+            return ServiceResult<IEnumerable<SendServiceStudentDto>>.SuccessResult(studentServiceDtos);
         }
 
         public async Task<Student?> GetStudentByIdAsync(int serviceId, int studentId)
@@ -232,7 +259,7 @@ namespace YanKoltukBackend.Services.Implementations
                 studentService.ServiceLogs.Add(serviceLog);
                 await _studentServiceRepo.UpdateAsync(studentService);
 
-                var parentId = studentService.Student.ParentId;
+                /*var parentId = studentService.Student.ParentId;
                 var parentUserId = (await _parentRepo.GetByIdAsync(parentId))?.UserId.ToString();
                 if (parentUserId != null)
                     await _hubContext.Clients.User(parentUserId)
@@ -255,7 +282,7 @@ namespace YanKoltukBackend.Services.Implementations
                                 .SendAsync("ReceiveNotification", "Hazırlanın, servis aracı evinize yaklaşmakta.");
                         }
                     }
-                }
+                }*/
 
                 return ServiceResult<StudentService>.SuccessResult(studentService);
             
@@ -306,8 +333,12 @@ namespace YanKoltukBackend.Services.Implementations
 
                 await _studentServiceRepo.UpdateAsync(studentService);
 
-                var serviceId = studentService.ServiceId;
-                var serviceUserId = (await _serviceRepo.GetByIdAsync(serviceId))?.UserId.ToString();
+                /*var serviceId = studentService.ServiceId;
+                if (serviceId == null)
+                    if (studentService == null)
+                        return ServiceResult<StudentService>.ErrorResult("Error: Service not found");
+
+                var serviceUserId = (await _serviceRepo.GetByIdAsync(serviceId)).UserId.ToString();
                 if (serviceUserId != null)
                 {
 
@@ -335,7 +366,7 @@ namespace YanKoltukBackend.Services.Implementations
                     }
 
                     await _parentNotificationRepo.AddAsync(notification);
-                }
+                }*/
 
                 return ServiceResult<StudentService>.SuccessResult(studentService, "Attendancy updated");
             }
@@ -343,6 +374,31 @@ namespace YanKoltukBackend.Services.Implementations
             {
                 return ServiceResult<StudentService>.ErrorResult("Error: StudentService not updated - " + ex.Message);
             }
+        }
+
+        public async Task<ServiceResult<Student>> DeleteStudentAsync(int parentId, int studentId)
+        {
+            var parent = await _parentRepo.GetByIdAsync(parentId);
+            if (parent == null)
+                return ServiceResult<Student>.ErrorResult("Error: Parent not found");
+
+            var student = (await _studentRepo.FindAsync(
+                s => s.StudentId == studentId && s.ParentId == parentId,
+                include: s => s.Include(x => x.StudentService)
+                                .ThenInclude(ss => ss.ServiceLogs))
+            ).FirstOrDefault();
+
+            if (student == null)
+                return ServiceResult<Student>.ErrorResult("Error: Student not found");
+
+            if (student.StudentService != null)
+            {
+                student.StudentService.ServiceLogs.Clear();
+                await _studentServiceRepo.DeleteAsync(student.StudentService); 
+            }
+
+            await _studentRepo.DeleteAsync(student);
+            return ServiceResult<Student>.SuccessResult(student);
         }
 
         public async Task<ServiceResult<StudentService>> DeleteStudentServiceAsync(int studentId)
