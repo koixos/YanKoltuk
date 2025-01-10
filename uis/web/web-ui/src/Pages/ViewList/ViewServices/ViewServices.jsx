@@ -52,10 +52,13 @@ const ViewServices = () => {
             ) : (
                 <div class="container" id="viewlist-container">
                     <div class="items" id="viewlist-items">
+                        <button id='back-btn' className="btn btn-secondary" onClick={() => navigate(-1)}>
+                            <i class="fa-solid fa-xmark fa-lg"/>
+                        </button>
                         <div class="items-head" id="viewlist-items-head">
                             <p>Kayıtlı Servisler</p>
-                            <hr/>
                         </div>
+                        <hr />
                         <div class="items-body" id="viewlist-items-body">
                             { !services || services.length === 0 ? (
                                 <p>Kayıtlı Servis Bulunamadı</p>
@@ -68,7 +71,7 @@ const ViewServices = () => {
                                         id="viewlist-items-body-content"
                                     >
                                         <span> {index + 1}) {item.plate} - {item.driverName} </span>
-                                        <i class="fa fa-angle-right"></i>
+                                        <i class="fa fa-angle-right"/>
                                     </div>
                                 ))
                             )}

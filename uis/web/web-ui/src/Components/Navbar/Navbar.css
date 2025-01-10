@@ -36,13 +36,14 @@
   background-color: #fff  ;
 }
 
-@media(max-width: 991.98px) {
-  .id-no {
-    padding-right: 0;
-    padding-top: 10px;
-  }
+.login-navbar .collapse,
+.login-navbar .id-no,
+.login-navbar #sign-out-btn {
+  display: none;
+}
 
-  #btn {
-    padding-bottom: 0;
+@media (max-width: 768px) {
+  #navbar .id-no {
+    display: none;
   }
 }

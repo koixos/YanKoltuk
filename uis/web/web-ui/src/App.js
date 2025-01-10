@@ -19,12 +19,10 @@ import AddManager from './Pages/AddManager/AddManager';
 import ViewManagers from './Pages/ViewList/ViewManagers/ViewManagers';
 
 function App() {
-  const username = localStorage.getItem("username");
-
   return (
     <div>
       <BrowserRouter>
-      <Navbar loginId={username}/>
+      <Navbar/>
         <Routes>
           <Route path='/' exact element={<Login/>}/>
           <Route path='/admin-dashboard' element={

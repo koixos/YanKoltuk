@@ -1,6 +1,6 @@
 import './AddManager.css';
 import React, { useState } from 'react';
-import { toast, ToastContainer } from "react-toastify";
+import { Flip, toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../Services/AxiosInstance';
@@ -9,7 +9,7 @@ const AddManager = () => {
     const [data, setData] = useState({
         Username: ""
     });
-
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -24,38 +24,42 @@ const AddManager = () => {
         e.preventDefault();
 
         try {
-            await axiosInstance.post("/admin/addManager", data);
-            toast.success('Başarıyla kaydedildi!', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: true,
+            const response = await axiosInstance.post("/admin/addManager", data);
+            setPassword(response.data);
+            toast.success('Başarıyla kaydedildi.', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
                 closeOnClick: true,
-                pauseOnHover: false,
+                pauseOnHover: true,
                 draggable: true,
-                progress: undefined,
+                theme: "light",
+                transition: Flip,
             });
-
-            setTimeout(() => {
-                navigate('/admin-dashboard');
-            }, 1800); 
         } catch (err) {
-            toast.error("Hata oluştu " + err.response?.data?.message || "Bilinmeyen bir hata", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: true,
+            toast.error("Yönetici eklenemedi." , {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
                 closeOnClick: true,
-                pauseOnHover: false,
+                pauseOnHover: true,
                 draggable: true,
+                theme: "light",
+                transition: Flip,
             });
         }
     };
 
     return (
-        <div className="add-service">
-            <div className="container" id="add-service-container">
-                <header>Yönetici Kayıt</header>
+        <div className="add-manager">
+            <div className="container" id="add-manager-container">
+                <button id='back-btn' className="btn btn-secondary" onClick={() => navigate(-1)}>
+                    <i class="fa-solid fa-xmark fa-lg"/>
+                </button>
                 <form onSubmit={handleSubmitAsync}>
                     <div className="form first">
+                        <h3>Yönetici Kayıt</h3>
+                        <hr />
                         <div className="details personal">
                             <span className="title">Yönetici Detayları</span>
                             <div className="input-field">
@@ -69,15 +73,20 @@ const AddManager = () => {
                                     required
                                 />
                             </div>
-                            <div className="button-container">
+                            <div className="manager-button-container">
                                 <button type="submit" className="submit">
-                                    <span className="btnText">Submit</span>
+                                    <span className="btnText">Gönder</span>
                                     <i className="uil uil-navigator"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </form>
+                {password && (
+                    <div className="password-display">
+                        <p>Şifre: <strong>{password}</strong></p>
+                    </div>
+                )}
                 <ToastContainer />
             </div>
         </div>

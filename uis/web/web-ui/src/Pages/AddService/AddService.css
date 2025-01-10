@@ -1,65 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
 
-.add-service {
-    font-family: 'Poppins', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 #add-service-container {
+    font-family: 'Poppins', sans-serif;
     position: relative;
-    max-width: 900px;
-    width: 100%;
-    border-radius: 6px;
-    padding: 30px;
-    margin: 100px 15px 15px; 
-    background-color: #fff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    align-content: center;
+    margin: auto;
 }
 
-#add-service-container header {
-    position: relative;
+#back-btn {
+    position: absolute;
+    top: 100px;
+    left: 155vh;
+    border: none ;
+    background: none;
+    border-radius: 5px ;
+    cursor: pointer ;
+    font-size: 22px ;
+    color: gray;
+}
+
+#add-service-container h3 {
     font-size: 20px;
     font-weight: 600;
     color: #333;
 }
 
-#add-service-container header::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    height: 3px;
-    width: 27px;
-    border-radius: 8px;
-    background-color: #1d39c4;
-}
-
 #add-service-container form {
-    position: relative;
-    margin-top: 16px;
-    min-height: 490px;
-    background-color: #fff;
-    overflow: hidden;
-}
-
-#add-service-container form .form {
-    position: absolute;
-    background-color: #fff;
-    transition: 0.3s ease;
-}
-
-#add-service-container form.secActive .form.first {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(-100%);
+    margin: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: white;
+    padding: 35px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-top: 10px solid #3f51b5;
 }
 
 #add-service-container form .title {
     display: block;
-    margin-bottom: 8px;
     font-size: 16px;
     font-weight: 500;
     margin: 6px 0;
@@ -115,9 +94,6 @@
 }
 
 .button-container button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 45px;
     max-width: 200px;
     width: 100%;
@@ -144,6 +120,14 @@
     margin: 0 6px;
 }
 
+#add-service-container .password-display {
+    text-align: left;
+    border: none;
+    font-size: 16px;
+    bottom: 100px;
+    left: 80px;
+}
+
 @media (max-width: 750px) {
     #add-service-container form {
         overflow-y: scroll;
@@ -160,6 +144,6 @@
 
 @media (max-width: 550px) {
     #add-service-container form .fields .input-field {
-        width: 100%; /* 1 field per row on small screens */
+        width: 100%; 
     }
 }

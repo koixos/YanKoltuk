@@ -90,7 +90,7 @@ namespace YanKoltukBackend.Services.Implementations
                 admin.Managers.Add(manager);
                 await _adminRepo.UpdateAsync(admin);
 
-                return ServiceResult<Manager>.SuccessResult(manager, "Manager added with password:\n\t" + passwd);
+                return ServiceResult<Manager>.SuccessResult(manager, passwd);
             }
             catch (Exception ex)
             {

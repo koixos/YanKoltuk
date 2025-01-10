@@ -102,7 +102,7 @@ namespace YanKoltukBackend.Services.Implementations
                 manager.Services.Add(service);
                 await _managerRepo.UpdateAsync(manager);
 
-                return ServiceResult<Service>.SuccessResult(service, "Service added with password:\n\t" + passwd);
+                return ServiceResult<Service>.SuccessResult(service, passwd);
             }
             catch (Exception ex)
             {

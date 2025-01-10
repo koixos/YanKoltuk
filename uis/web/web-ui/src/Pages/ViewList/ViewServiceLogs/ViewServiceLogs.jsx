@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const ViewServiceLogs = () => {
+
+    
     return (
         <div className="view-services-container">
-            {/*<ViewList items={0}/>*/}
+            
         </div>
     );
 };

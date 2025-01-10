@@ -1,6 +1,6 @@
 import './AddService.css';
 import React, { useState } from 'react';
-import { toast, ToastContainer } from "react-toastify";
+import { Flip, toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../Services/AxiosInstance';
@@ -20,6 +20,7 @@ const AddService = () => {
         StewardessPhone: "",
         StewardessPhoto: "",
     });
+    const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
 
@@ -35,28 +36,28 @@ const AddService = () => {
         e.preventDefault();
 
         try {
-            await axiosInstance.post("/manager/addService", data);
-            toast.success('Başarıyla kaydedildi!', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: true,
+            const response = await axiosInstance.post("/manager/addService", data);
+            setPassword(response.data);
+            toast.success('Başarıyla kaydedildi.', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
                 closeOnClick: true,
-                pauseOnHover: false,
+                pauseOnHover: true,
                 draggable: true,
-                progress: undefined,
+                theme: "light",
+                transition: Flip,
             });
-
-            setTimeout(() => {
-                navigate('/manager-dashboard');
-            }, 1800); 
         } catch (err) {
-            toast.error("Hata oluştu " + err.response?.data?.message || "Bilinmeyen bir hata", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: true,
+            toast.error("Servis eklenemedi." , {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
                 closeOnClick: true,
-                pauseOnHover: false,
+                pauseOnHover: true,
                 draggable: true,
+                theme: "light",
+                transition: Flip,
             });
         }
     };
@@ -64,9 +65,13 @@ const AddService = () => {
     return (
         <div className="add-service">
             <div className="container" id="add-service-container">
-                <header>Servis Kayıt</header>
+                <button id='back-btn' className="btn btn-secondary" onClick={() => navigate(-1)}>
+                    <i class="fa-solid fa-xmark fa-lg"/>
+                </button>
                 <form onSubmit={handleSubmitAsync}>
                     <div className="form first">
+                        <h3>Servis Kayıt</h3>
+                        <hr />
                         <div className="details personal">
                             <span className="title">Araç Detayları</span>
                             <div className="fields">
@@ -206,6 +211,11 @@ const AddService = () => {
                         </div>
                     </div>
                 </form>
+                {password && (
+                    <div className="password-display">
+                        <p>Şifre: <strong>{password}</strong></p>
+                    </div>
+                )}
                 <ToastContainer />
             </div>
         </div>

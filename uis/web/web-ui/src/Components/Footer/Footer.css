@@ -1,12 +1,7 @@
 #footer {
-    position: absolute;
+    position: relative;
     width: 100%;
     background-color: #3f51b5;
-}
-
-#container {
-    padding: auto;
-    margin: auto;
 }
 
 #copyright {
