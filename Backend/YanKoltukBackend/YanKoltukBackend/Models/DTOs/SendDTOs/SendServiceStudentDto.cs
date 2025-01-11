@@ -14,6 +14,8 @@
         public required string DriverNote { get; set; }
         public required int SortIndex { get; set; }
         public required string? Direction { get; set; }
+        public required double? Latitude { get; set; }
+        public required double? Longitude { get; set; }
         public required DateTime? ExcludedStartDate { get; set; }
         public required DateTime? ExcludedEndDate { get; set; }
     }

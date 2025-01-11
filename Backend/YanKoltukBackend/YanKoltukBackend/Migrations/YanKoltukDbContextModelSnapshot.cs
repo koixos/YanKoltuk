@@ -292,6 +292,12 @@ namespace YanKoltukBackend.Migrations
                     b.Property<DateTime?>("ExcludedStartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
 

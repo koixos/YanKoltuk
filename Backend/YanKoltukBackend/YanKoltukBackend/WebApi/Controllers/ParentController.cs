@@ -76,7 +76,7 @@ namespace YanKoltukBackend.WebApi.Controllers
                     return BadRequest("Student is null");
 
                 var serviceId = (await _studentServiceService.GetServiceIdByPlateAsync(studentDto.Plate)).Data;
-                var resultStudentService = await _studentServiceService.CreateStudentServiceAsync(student, serviceId);
+                var resultStudentService = await _studentServiceService.CreateStudentServiceAsync(student, serviceId, studentDto.Latitude, studentDto.Longitude);
                 return resultStudentService.Success ? NoContent() : BadRequest(resultStudentService.Message);
             } else
             {

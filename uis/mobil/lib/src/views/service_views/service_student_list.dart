@@ -46,7 +46,7 @@ class _ServiceStudentListState extends State<ServiceStudentList> {
 
   Future<void> _handleEditNote(int? studentId, String note) async {
     final updatedStudent = UpdateDriverNoteModel (
-      driverNote: note
+        driverNote: note
     );
     final response = await _serviceService.editNote(updatedStudent, studentId);
     if (response) {
@@ -227,11 +227,11 @@ class _ServiceStudentListState extends State<ServiceStudentList> {
                   ],
                 ),
               ),
-            if (isNote)
-              IconButton(
-                icon: const Icon(Icons.edit, color: Colors.blue),
-                onPressed: () => _showEditNoteDialog(student),
-            )],
+              if (isNote)
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  onPressed: () => _showEditNoteDialog(student),
+                )],
           ),
         ),
       );
@@ -270,7 +270,7 @@ class _ServiceStudentListState extends State<ServiceStudentList> {
         ],
       ),
       body: isEditMode ?
-        ReorderableListView(
+      ReorderableListView(
           onReorder: (int oldIndex, int newIndex) {
             setState(() {
               if (newIndex > oldIndex) newIndex--;
@@ -298,7 +298,7 @@ class _ServiceStudentListState extends State<ServiceStudentList> {
               ),
             );
           })
-        ) : ListView.builder(
+      ) : ListView.builder(
           itemCount: students.length,
           itemBuilder: (context, index) {
             final student = students[index];
@@ -315,52 +315,46 @@ class _ServiceStudentListState extends State<ServiceStudentList> {
             );
           }),
       bottomNavigationBar: isEditMode ?
-        BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isEditMode = false;
-                  });
-                },
-                child: const Text('İptal'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  setState(() {
-                    isEditMode = false;
-                  });
-                  await _handleUpdateOrder();
-                },
-                child: const Text('Onayla'),
-              ),
-            ],
-          ),
-        ) : BottomNavigationBar(
-          currentIndex: 1,
-          onTap: (index) {
-            if (index == 0) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const ServiceDashboard()),
-              );
-            } else if (index == 2) {
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const MessagesScreen()),
-              );*/
-            }
-          },
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.blueAccent,
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Öğrenci Listesi'),
-            BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Bildirimler'),
+      BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  isEditMode = false;
+                });
+              },
+              child: const Text('İptal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                setState(() {
+                  isEditMode = false;
+                });
+                await _handleUpdateOrder();
+              },
+              child: const Text('Onayla'),
+            ),
           ],
+        ),
+      ) : BottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ServiceDashboard()),
+            );
+          }
+        },
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Öğrenci Listesi'),
+        ],
       ),
     );
   }

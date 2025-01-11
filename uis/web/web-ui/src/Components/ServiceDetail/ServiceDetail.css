@@ -1,59 +1,63 @@
 #servicedetail-container {
-    top: 160px;
-    font-family: 'Rubik', sans-serif;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    background-color: #f5f5f5;
-    min-width: 100%;
-    min-height: 100vh;
-    gap: 20px;
     position: relative;
-    padding: 20px;
+    display: flex;
+    margin: 75px auto;
+    font-family: 'Rubik', sans-serif;
 }
 
 #servicedetail-container .back-btn {
+    top: 45px;
+    padding-top: 30px;
+    justify-content: center;
     position: absolute;
-    top: -60px;
-    left: 20px;
-    background-color: #3f51b5;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-#servicedetail-container .back-btn:hover {
-    background-color: #1d39c4;
+    border: none ;
+    background: #fff;
+    border-radius: 5px ;
+    cursor: pointer ;
+    color: gray;
+    z-index: 1;
 }
 
 #servicedetail-details {
     display: flex;
-    flex-direction: column;
-    flex: 2;
-    padding: 13px;
-    background: #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    flex-direction: row;
+    margin: 40px auto;
+    padding: 10px;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-top: 10px solid #3f51b5;
-    height: 66vh;
-    max-width: 50%;
+}
+
+#servicedetail-items-head {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 15px;
+}
+
+#servicedetail-items-head p {
+    color: #3f51b5;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#servicedetail-items-head hr {
+    margin: 0;
 }
 
 .btn-group {
     position: absolute;
-    top: 60px;
-    left: 85vh;
+    top: 10px;
+    left: 58vh;
 }
 
 .btn-group button {
     background-color: #3f51b5;
     color: #fff;
     border: none;
-    padding: 5px 10px;
     margin: 5px;
+    padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s ease;
@@ -63,7 +67,7 @@
     background-color: #1d39c4;
 }
 
-#servicedetail-students {
+/*#servicedetail-students {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -73,41 +77,19 @@
     border-top: 10px solid #3f51b5;
     height: 66vh;
     max-width: 50%;
-}
-
-#servicedetail-items-head p {
-    padding: 5px 20px;
-    margin: 10px;
-    color: #3f51b5;
-    font-weight: bold;
-    font-size: 30px;
-}
-
-#servicedetail-items-head hr {
-    margin: 0px 30px;
-    border: 1px solid #3f51b5;
-}
+}*/
 
 #servicedetail-items-body {
-    margin: 10px;
     display: flex;
+    width: 100%;
     flex-direction: column;
     overflow-y: scroll;
-}
-
-#servicedetail-items-body hr {
-    width: 97%;
-    margin: 5px 10px;
+    overflow-x: hidden;
 }
 
 #servicedetail-items-body-content {
-    padding: 10px;
-    margin: 0 10px;
-    gap: 6px;
-    display: flex;
-    flex-direction: column;
+    padding-left: 22px;
     font-size: 16px;
-    border: 1px solid transparent;
 }
 
 .popup {

@@ -1,27 +1,23 @@
 #viewlist-container {
     position: relative;
     display: flex;
-    align-items: center;
     margin: 75px auto;
     font-family: 'Rubik', sans-serif;
 }
 
 #viewlist-items {
-    display: flex;
-    height: 70vh;
+    height: 80vh;
     overflow-y: scroll;
     overflow-x: hidden;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin: 40px auto;
     width: 100%;
     background: white;
-    padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-top: 10px solid #3f51b5;
 }
 
 #viewlist-container #back-btn {
-    top: 35px;
+    top: 45px;
     padding-top: 30px;
     justify-content: center;
     position: absolute;
@@ -30,14 +26,14 @@
     border-radius: 5px ;
     cursor: pointer ;
     color: gray;
+    z-index: 1;
 }
 
 #viewlist-items-head {
-    position: absolute;
+    position: sticky;
+    top: 0;
     background-color: #fff;
-    top: 50px;
-    width: 50%;
-    padding: 10px;
+    padding: 15px;
 }
 
 #viewlist-items-head p {
@@ -47,21 +43,14 @@
 }
 
 #viewlist-items-head hr {
-    width: 35%;
-    border: 1px solid #3f51b5;
-}
-
-#viewlist-items-body {
-    margin-top: 90px;
-    display: grid;
-    grid-gap: 10px;
+    margin: 0;
 }
 
 #viewlist-items-body-content {
+    margin: 15px;
     padding: 10px;
-    margin: auto;
     display: grid;
-    grid-template-columns: 10fr 1fr;
+    grid-template-columns: 10fr 5fr;
     font-size: 20px;
     grid-gap: 123vh;
     border: 1px solid transparent;

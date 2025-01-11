@@ -57,8 +57,8 @@ const ViewServices = () => {
                         </button>
                         <div class="items-head" id="viewlist-items-head">
                             <p>Kayıtlı Servisler</p>
+                            <hr />
                         </div>
-                        <hr />
                         <div class="items-body" id="viewlist-items-body">
                             { !services || services.length === 0 ? (
                                 <p>Kayıtlı Servis Bulunamadı</p>

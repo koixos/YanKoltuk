@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ServiceDetail.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axiosInstance from "../../Services/AxiosInstance";
 
-function ServiceDetail({ service, onBack, onEdit }) {
+function ServiceDetail({ service, onEdit }) {
     const [showPopup, setShowPopup] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [updatedService, setUpdatedService] = useState(service);
+    const [students, setStudents] = useState();
 
     const navigate = useNavigate();
 
@@ -42,10 +43,6 @@ function ServiceDetail({ service, onBack, onEdit }) {
             console.error("Could not update the service: ", err);
             toast.error("Servis bilgileri güncellenemedi.");
         }
-    };
-
-    const handleBack = () => {
-        return onBack(null);
     };
 
     const handleEditToggle = () => {
@@ -84,33 +81,47 @@ function ServiceDetail({ service, onBack, onEdit }) {
         setShowPopup(false);
     };
 
+    useEffect(() => {
+        const fetchStudentsAsync = async () => {
+            try {
+                const response = await axiosInstance.get(`/manager/students/${service.serviceId}`);
+                setStudents(response.data.$values || []);
+                console.log(response.data)
+            } catch (err) {
+                console.error("Could not load services: ", err);
+                setStudents([]);
+            }
+        };
+        fetchStudentsAsync();
+    }, []);
+
     return (
         <div className="container" id="servicedetail-container">
-            <button className="back-btn" onClick={handleBack}>
-                <i class="fa-solid fa-arrow-left-long" />
+            <button id='back-btn' className="btn btn-secondary" onClick={() => navigate(-1)}>
+                <i class="fa-solid fa-xmark fa-lg"/>
             </button>
             <div className="items" id="servicedetail-details">
-                <div className="items-head" id="servicedetail-items-head">
-                    <p>Servis Bilgileri</p>
-                    <hr />
-                    <div className="btn-group">
-                        {!isEditing ? (
-                            <button className="edit-btn" onClick={handleEditToggle}>
-                                <i class="fa-regular fa-pen-to-square" />
-                            </button>
-                        ) : (
-                            <button className="edit-btn" onClick={handleSubmitAsync}>
-                                <i class="fa-solid fa-check" />
-                            </button>
-                        )}
-                        <button className="delete-btn" onClick={handleDelete}>
-                            <i class="fa-regular fa-trash-can" />
-                        </button>
-                    </div>
-                </div>
                 <div className="items-body" id="servicedetail-items-body">
+                    <div className="items-head" id="servicedetail-items-head">
+                        <div className="btn-group">
+                            {!isEditing ? (
+                                <button className="edit-btn" onClick={handleEditToggle}>
+                                    <i class="fa-regular fa-pen-to-square" />
+                                </button>
+                            ) : (
+                                <button className="edit-btn" onClick={handleSubmitAsync}>
+                                    <i class="fa-solid fa-check" />
+                                </button>
+                            )}
+                            <button className="delete-btn" onClick={handleDelete}>
+                                <i class="fa-regular fa-trash-can" />
+                            </button>
+                        </div>
+                        <p>Servis Bilgileri</p>
+                        <hr />
+                    </div>
                     <div className="items-body-content" id="servicedetail-items-body-content">
-                    <div className="row">
+                        <div className="row">
                             <div className="col-sm-3"><h6 className="mb-0">Servis ID:</h6></div>
                             <div className="col-sm-9 text-secondary"> {service.serviceId} </div>
                             <hr />
@@ -232,14 +243,11 @@ function ServiceDetail({ service, onBack, onEdit }) {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="items" id="servicedetail-students">
-                <div className="items-head" id="servicedetail-items-head">
-                    <p>Kayıtlı Öğrenciler</p>
-                    <hr />
-                </div>
                 <div className="items-body" id="servicedetail-items-body">
+                    <div className="items-head" id="servicedetail-items-head">
+                        <p>Kayıtlı Öğrenciler</p>
+                        <hr />
+                    </div>
                     {service.students && service.students.length > 0 ? (
                         service.students.map((student, i) => (
                             <div 

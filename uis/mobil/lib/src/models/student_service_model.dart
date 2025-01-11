@@ -8,6 +8,8 @@ class StudentServiceModel {
   final String address;
   final String plate;
   final String? driverNote;
+  final double? latitude;
+  final double? longitude;
   final String? direction;
   final DateTime? excludedStartDate;
   final DateTime? excludedEndDate;
@@ -26,6 +28,8 @@ class StudentServiceModel {
     required this.status,
     required this.driverNote,
     required this.sortIndex,
+    required this.latitude,
+    required this.longitude,
     required this.direction,
     required this.excludedStartDate,
     required this.excludedEndDate,
@@ -44,6 +48,8 @@ class StudentServiceModel {
       'status': status,
       'driverNote': driverNote,
       'sortIndex': sortIndex,
+      'latitude': latitude,
+      'longitude': longitude,
       'direction': direction,
       'excludedStartDate': excludedStartDate?.toIso8601String(),
       'excludedEndDate': excludedEndDate?.toIso8601String(),
@@ -63,6 +69,8 @@ class StudentServiceModel {
       status: json['status'] ?? '',
       driverNote: json['driverNote'] ?? '',
       sortIndex: json['sortIndex'] as int?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       direction: json['direction'] ?? '',
       excludedStartDate: json['excludedStartDate'] != null
         ? DateTime.parse(json['excludedStartDate'])

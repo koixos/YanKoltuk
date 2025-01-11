@@ -69,7 +69,7 @@ const ViewManagers = () => {
             <div class="items" id="viewlist-items">
                 <div class="items-head" id="viewlist-items-head">
                     <p>Kayıtlı Yöneticiler</p>
-                    <hr/>
+                    <hr />
                 </div>
                 <div class="items-body" id="viewlist-items-body">
                     { !managers || managers.length === 0 ? (

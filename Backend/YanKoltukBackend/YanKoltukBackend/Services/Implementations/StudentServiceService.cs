@@ -31,6 +31,26 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<IEnumerable<string?>>.SuccessResult(plates);
         }
 
+        public async Task<ServiceResult<IEnumerable<SendManagerStudentDto>>> GetServiceStudentsAsync(int serviceId)
+        {
+            var students = await _studentServiceRepo.FindAsync(
+                ss => ss.ServiceId == serviceId,
+                include: ss => ss.Include(x => x.Student));
+
+            var studentDtos = students.Select(ss => new SendManagerStudentDto
+            {
+                StudentId = ss.StudentId,
+                IdNo = ss.Student.IdNo,
+                Name = ss.Student.Name,
+                SchoolNo = ss.Student.SchoolNo,
+                ParentName = ss.Student.Parent.Name,
+                ParentPhone = ss.Student.Parent.Phone,
+                Address = ss.Student.Parent.Address,
+            });
+
+            return ServiceResult<IEnumerable<SendManagerStudentDto>>.SuccessResult(studentDtos);
+        }
+
         public async Task<ServiceResult<IEnumerable<SendParentStudentDto>>> GetStudentsAsync(int parentId)
         {
             var students = await _studentRepo.FindAsync(
@@ -90,6 +110,8 @@ namespace YanKoltukBackend.Services.Implementations
                 Status = ss.Status.GetDescription(),
                 DriverNote = ss.DriverNote,
                 SortIndex = ss.SortIndex,
+                Latitude = ss.Latitude,
+                Longitude = ss.Longitude,
                 Direction = ss.Direction.GetDescription(),
                 ExcludedStartDate = ss.ExcludedStartDate,
                 ExcludedEndDate = ss.ExcludedEndDate,
@@ -123,6 +145,8 @@ namespace YanKoltukBackend.Services.Implementations
                 Status = ss.Status.GetDescription(),
                 DriverNote = ss.DriverNote,
                 SortIndex = ss.SortIndex,
+                Latitude = ss.Latitude,
+                Longitude = ss.Longitude,
                 Direction = ss.Direction.GetDescription(),
                 ExcludedStartDate = ss.ExcludedStartDate,
                 ExcludedEndDate = ss.ExcludedEndDate,
@@ -152,7 +176,7 @@ namespace YanKoltukBackend.Services.Implementations
             return ServiceResult<List<DateTime>>.SuccessResult(excludedDays);
         }
 
-        public async Task<ServiceResult<StudentService>> CreateStudentServiceAsync(Student student, int serviceId)
+        public async Task<ServiceResult<StudentService>> CreateStudentServiceAsync(Student student, int serviceId, double latitude, double longitude)
         {
             var service = await _serviceRepo.GetByIdAsync(serviceId);
             if (service == null)
@@ -163,7 +187,9 @@ namespace YanKoltukBackend.Services.Implementations
                 StudentId = student.StudentId,
                 Student = student,
                 ServiceId = serviceId,
-                Service = service
+                Service = service,
+                Latitude = latitude,
+                Longitude = longitude
             };
             await _studentServiceRepo.AddAsync(studentService);
 

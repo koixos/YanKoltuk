@@ -219,11 +219,11 @@ class _ServiceDashboardState extends State<ServiceDashboard> {
                       topLeft: Radius.circular(20),
                       bottomLeft: Radius.circular(20),
                     ), () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const DrivingListPage(tripType: 0)),
-                      );
-                    },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const DrivingListPage(tripType: 0)),
+                    );
+                  },
                   ),
                   const SizedBox(width: 6),
                   _buildStyledButton(
@@ -254,11 +254,6 @@ class _ServiceDashboardState extends State<ServiceDashboard> {
               context,
               MaterialPageRoute(builder: (context) => ServiceStudentList(capacity: service?["capacity"],)),
             );
-          } else if (index == 2) {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MessagesScreen()),
-            );*/
           }
         },
         type: BottomNavigationBarType.fixed,
@@ -267,7 +262,6 @@ class _ServiceDashboardState extends State<ServiceDashboard> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Öğrenci Listesi'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Bildirimler'),
         ],
       ),
     );

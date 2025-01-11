@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
+using YanKoltukBackend.Services.Implementations;
 using YanKoltukBackend.Services.Interfaces;
 
 namespace YanKoltukBackend.WebApi.Controllers
@@ -9,9 +10,10 @@ namespace YanKoltukBackend.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Manager")]
-    public class ManagerController(IManagerService managerService) : ControllerBase
+    public class ManagerController(IManagerService managerService, IStudentServiceService studentServiceService) : ControllerBase
     {
         private readonly IManagerService _managerService = managerService;
+        private readonly IStudentServiceService _studentServiceService = studentServiceService;
 
         [HttpGet("manager")]
         public async Task<IActionResult> GetManagerId()
@@ -34,6 +36,13 @@ namespace YanKoltukBackend.WebApi.Controllers
             int managerId = (await _managerService.GetManagerIdAsync()).Data;
             var service = await _managerService.GetServiceByIdAsync(managerId, id);
             return service == null ? NotFound() : Ok(service);
+        }
+
+        [HttpGet("students/{id}")]
+        public async Task<IActionResult> GetServiceStudentsById(int id)
+        {
+            var students = await _studentServiceService.GetServiceStudentsAsync(id);
+            return students == null ? NotFound() : Ok(students);
         }
 
         [HttpPost("addService")]

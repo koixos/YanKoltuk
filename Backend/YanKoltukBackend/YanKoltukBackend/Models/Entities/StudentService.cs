@@ -10,6 +10,8 @@ namespace YanKoltukBackend.Models.Entities
         public StudentStatus Status { get; set; } = StudentStatus.Error;
         public string DriverNote { get; set; } = string.Empty;
         public int SortIndex { get; set; } = 0;
+        public required double? Latitude { get; set; }
+        public required double? Longitude { get; set; }
         public TripType Direction { get; set; } = TripType.Error;
         public DateTime? ExcludedStartDate { get; set; }
         public DateTime? ExcludedEndDate { get; set; }

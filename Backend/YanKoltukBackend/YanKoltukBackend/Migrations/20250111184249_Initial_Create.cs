@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace YanKoltukBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial_Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -187,7 +187,9 @@ namespace YanKoltukBackend.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     DriverNote = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SortIndex = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<int>(type: "int", nullable: true),
+                    Latitude = table.Column<double>(type: "float", nullable: true),
+                    Longitude = table.Column<double>(type: "float", nullable: true),
+                    Direction = table.Column<int>(type: "int", nullable: false),
                     ExcludedStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ExcludedEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: true),

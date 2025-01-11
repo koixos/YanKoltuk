@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobil/src/models/student_model.dart';
 import 'package:mobil/src/models/student_service_model.dart';
 import 'package:mobil/src/models/update_parent_model.dart';
@@ -8,6 +9,7 @@ import 'package:mobil/src/shared/secure_storage.dart';
 import 'package:mobil/src/views/login_page.dart';
 import 'package:mobil/src/widgets/calendar_page.dart';
 
+import '../../widgets/location_picker_page.dart';
 import '../../widgets/student_card.dart';
 
 class ParentDashboard extends StatefulWidget {
@@ -28,6 +30,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
   List<String> servicePlates = [];
   Map<String, dynamic>? parent;
   String selectedPlate = "Seçiniz";
+  LatLng? selectedLocation;
 
   @override
   void initState() {
@@ -66,8 +69,8 @@ class _ParentDashboardState extends State<ParentDashboard> {
 
   Future<void> _handleUpdateParent(String phone, String address) async {
     final parentUpdated = UpdateParentModel(
-      phone: phone,
-      address: address
+        phone: phone,
+        address: address
     );
     final response = await _parentService.updateParent(parentUpdated);
     if (response) {
@@ -101,6 +104,8 @@ class _ParentDashboardState extends State<ParentDashboard> {
       name: nameController.text,
       schoolNo: schoolNoController.text,
       plate: selectedPlate,
+      latitude: selectedLocation!.latitude,
+      longitude: selectedLocation!.longitude,
     );
 
     final response = await _parentService.addStudent(student);
@@ -162,9 +167,9 @@ class _ParentDashboardState extends State<ParentDashboard> {
       await SecureStorage.deleteUserInfo();
 
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-          (route) => false,
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -339,6 +344,26 @@ class _ParentDashboardState extends State<ParentDashboard> {
                       );
                     }).toList(),
                   ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () async {
+                      LatLng? location = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LocationPickerPage(),
+                        ),
+                      );
+
+                      if (location != null) {
+                        setDialogState(() {
+                          selectedLocation = location;
+                        });
+                      }
+                    },
+                    child: Text(selectedLocation == null
+                        ? "Konum Bilgisi"
+                        : "Konum Seçildi"),
+                  ),
                 ],
               ),
               actions: [
@@ -347,8 +372,8 @@ class _ParentDashboardState extends State<ParentDashboard> {
                   child: const Text("İptal"),
                 ),
                 TextButton(
-                    onPressed: () => _handleAddStudent(context),
-                    child: const Text("Ekle"),
+                  onPressed: () => _handleAddStudent(context),
+                  child: const Text("Ekle"),
                 )
               ],
             );
@@ -370,23 +395,29 @@ class _ParentDashboardState extends State<ParentDashboard> {
               title: const Text("Servis Bilgisini Güncelle"),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center, // Center yerine değişti
                 children: [
                   const SizedBox(height: 10),
-                  const Text("Servis Plakasını Güncelle:"),
-                  DropdownButton<String>(
-                    value: updatedPlate,
-                    onChanged: (String? newValue) {
-                      setDialogState(() {
-                        updatedPlate = newValue!;
-                      });
-                    },
-                    items: servicePlates.map<DropdownMenuItem<String>>((String plate) {
-                      return DropdownMenuItem<String>(
-                        value: plate,
-                        child: Text(plate),
-                      );
-                    }).toList(),
+                  const Text(
+                    "Servis Plakasını Güncelle:",
+                    textAlign: TextAlign.center, // Text ortalandı
+                  ),
+                  const SizedBox(height: 10),
+                  Center( // Dropdown'ı saran Center widget'ı eklendi
+                    child: DropdownButton<String>(
+                      value: updatedPlate,
+                      onChanged: (String? newValue) {
+                        setDialogState(() {
+                          updatedPlate = newValue!;
+                        });
+                      },
+                      items: servicePlates.map<DropdownMenuItem<String>>((String plate) {
+                        return DropdownMenuItem<String>(
+                          value: plate,
+                          child: Text(plate),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ],
               ),
@@ -481,25 +512,40 @@ class _ParentDashboardState extends State<ParentDashboard> {
         automaticallyImplyLeading: false,
         title: const Text("Öğrenci Listesi"),
       ),
-      body: students.isEmpty
-          ? const Center(
-              child: Text(
-                "Öğrenci eklemek için + butonuna tıklayınız.",
-                style: TextStyle(color: Colors.grey, fontSize: 20),
-                textAlign: TextAlign.center,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _fetchStudents();
+          await _fetchServicePlates();
+        },
+        child: students.isEmpty
+            ? Center(
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: const Center(
+                child: Text(
+                  "Öğrenci eklemek için + butonuna tıklayınız.",
+                  style: TextStyle(color: Colors.grey, fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            )
-          : ListView.builder(
-              itemCount: students.length,
-              itemBuilder: (context, index) {
-                return StudentCard(
-                  student: students[index],
-                  onEdit: () => _showEditStudentDialog(students[index]),
-                  onDelete: () => _showDeleteStudentDialog(students[index]),
-                  onSetExcludedDates: () => _onSetExcludedDates(students[index]),
-                );
-              },
             ),
+          ),
+        )
+            : ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(),
+          itemCount: students.length,
+          itemBuilder: (context, index) {
+            return StudentCard(
+              student: students[index],
+              onEdit: () => _showEditStudentDialog(students[index]),
+              onDelete: () => _showDeleteStudentDialog(students[index]),
+              onSetExcludedDates: () => _onSetExcludedDates(students[index]),
+            );
+          },
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           if (index == 0) {

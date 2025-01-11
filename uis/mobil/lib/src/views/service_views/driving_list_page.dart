@@ -5,6 +5,7 @@ import 'package:mobil/src/views/service_views/service_dashboard.dart';
 
 import '../../models/student_service_model.dart';
 import '../../service/service_service.dart';
+import '../../widgets/google_map_page.dart';
 
 class DrivingListPage extends StatefulWidget {
   final int tripType;
@@ -38,10 +39,90 @@ class _DrivingListPageState extends State<DrivingListPage> {
     }
   }
 
+  Future<bool> _showConfirmationDialog(String title, String message) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Hayır'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Evet'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    ) ?? false;
+  }
+
+  Future<void> _updateAllStudentsStatus() async {
+    for (var student in students) {
+      if (_isAttending(student)) {
+        await _serviceService.updateStatus(
+          student.studentId!,
+          UpdateStudentStatusModel(
+            status: "GetOff",
+            direction: widget.tripType == 0 ? "ToSchool" : "FromSchool",
+          ),
+        );
+        setState(() {
+          student.status = "GetOff";
+        });
+      }
+    }
+  }
+
+  void _handleNavigation(int index) async {
+    if (index == 0) {
+      // ServiceDashboard'a gitme işlemi
+      bool confirm = await _showConfirmationDialog(
+          'Çıkış Onayı',
+          'Sürüş bitiriliyor. Çıkmak istediğinize emin misiniz?'
+      );
+
+      if (confirm && mounted) {
+        await _updateAllStudentsStatus();
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ServiceDashboard()),
+        );
+      }
+    } else if (index == 2) {
+      // GoogleMapPage'e gitme işlemi
+      bool confirm = await _showConfirmationDialog(
+          'Harita Görünümü',
+          'Sürüşü harita kullanarak yapmak istediğinize emin misiniz? Eğer ki geçiş yaparsanız yoklamaya baştan başlamanız gerekecek.'
+      );
+
+      if (confirm && mounted) {
+        await _updateAllStudentsStatus();
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => GoogleMapPage(isReturnTrip: widget.tripType)),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _fetchDrivingList();
+    _fetchDrivingList().then((_) {
+      // Öğrenci listesi yüklendikten sonra statusları güncelle
+      _updateAllStudentsStatus();
+    });
     _scrollController = ScrollController();
   }
 
@@ -55,7 +136,7 @@ class _DrivingListPageState extends State<DrivingListPage> {
     UpdateStudentStatusModel updatedStudent = UpdateStudentStatusModel (
         status: status,
         direction: _getTripType()
-      );
+    );
 
     final response = await _serviceService.updateStatus(studentId!, updatedStudent);
     if (response) {
@@ -91,7 +172,7 @@ class _DrivingListPageState extends State<DrivingListPage> {
   int _getTotalAttending() {
     return students.where(_isAttending).length;
   }
-  
+
   void _scrollToStudent(int index) {
     final double offset = index * 130.0;
     if (offset > _scrollController.position.maxScrollExtent) {
@@ -108,7 +189,7 @@ class _DrivingListPageState extends State<DrivingListPage> {
   DateTime onlyDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +233,7 @@ class _DrivingListPageState extends State<DrivingListPage> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: _isAttending(student) ? Colors.grey : Colors.black,
+                                  color: _isAttending(student) ? Colors.black : Colors.grey,
                                 ),
                               ),
                               if (_isAttending(student))
@@ -181,18 +262,18 @@ class _DrivingListPageState extends State<DrivingListPage> {
                         ],
                       ),
                       Switch(
-                        value: student.status == "GetOff",
+                        value: student.status == "GetOn",
                         onChanged: !_isAttending(student)
                             ? null
                             : (value) async {
-                                setState(() {
-                                  student.status = value ? "GetOff" : "GetOn";
-                                });
-                                await _handleUpdateStudentStatus(student.studentId, student.status);
-                                if (value) {
-                                  _scrollToStudent(index);
-                                }
-                            },
+                          setState(() {
+                            student.status = value ? "GetOn" : "GetOff";
+                          });
+                          await _handleUpdateStudentStatus(student.studentId, student.status);
+                          if (value) {
+                            _scrollToStudent(index);
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -214,29 +295,17 @@ class _DrivingListPageState extends State<DrivingListPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const ServiceDashboard()), // Ana Sayfa
-            );
-          } else if (index == 2) {
-            /*Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MessagesScreen()), // Mesajlar
-            );*/
-          }
-        },
+        onTap: _handleNavigation,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blueAccent,
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Öğrenci Listesi'), // Mevcut ekran
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Bildirimler'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Servis Listesi'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Harita'),
         ],
       ),
     );
   }
-  
+
 }

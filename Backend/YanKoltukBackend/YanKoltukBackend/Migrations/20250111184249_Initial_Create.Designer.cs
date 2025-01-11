@@ -12,8 +12,8 @@ using YanKoltukBackend.Data;
 namespace YanKoltukBackend.Migrations
 {
     [DbContext(typeof(YanKoltukDbContext))]
-    [Migration("20250104084249_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250111184249_Initial_Create")]
+    partial class Initial_Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,7 +282,7 @@ namespace YanKoltukBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentServiceId"));
 
-                    b.Property<int?>("Direction")
+                    b.Property<int>("Direction")
                         .HasColumnType("int");
 
                     b.Property<string>("DriverNote")
@@ -294,6 +294,12 @@ namespace YanKoltukBackend.Migrations
 
                     b.Property<DateTime?>("ExcludedStartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
