@@ -16,7 +16,7 @@ export const Navbar = () => {
       navigate("/manager-dashboard");
       return;
     }
-    navigate("/not-found");
+    navigate("/");
   };
 
   const handleLogout = () => {
@@ -32,18 +32,14 @@ export const Navbar = () => {
     <nav className={`navbar navbar-expand-lg fixed-top ${isLoginPage ? 'login-navbar' : ''}`} id='navbar'>
       <div className="container">
         <i className="navbar-brand" onClick={handleClick}>
-          <img
-            src="logo192.png"
-            alt="Yan Koltuk Logo"
-            draggable="false"
-            height="45"
-          />
+          <p className='logo'>YAN KOLTUK</p>
+          <hr />
         </i>
         {!isLoginPage && (
           <>
             <div className="navbar-right">
               <ul className="navbar-nav ms-auto align-items-center">
-                <p className="id-no">Kullanıcı Kimliği: {localStorage.getItem("username")}</p>
+                <p className="id-no">Kullanıcı Adı: {localStorage.getItem("username")}</p>
                 <li className="nav-item ms-3" id="sign-out-btn">
                   <button
                     type="button"

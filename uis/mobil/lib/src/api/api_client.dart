@@ -4,7 +4,7 @@ import 'package:mobil/src/shared/secure_storage.dart';
 class ApiClient {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "http://10.0.2.2:5139/api",
+      baseUrl: "http://yankoltuk.com.tr:5000/api",
       responseType: ResponseType.json,
       connectTimeout: const Duration(milliseconds: 5000),
       receiveTimeout: const Duration(milliseconds: 3000),

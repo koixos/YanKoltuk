@@ -1,7 +1,24 @@
 #navbar {
+  height: 80px;
   align-items: center;
   justify-content: center;
   background-color: #3f51b5;
+}
+
+.logo {
+  font-size: 28px;
+  color: #f5f5f5;
+  font-weight: bold;
+  font-family: 'Rubik', sans-serif;
+  margin: auto;
+  margin-left: -80px;
+}
+
+#navbar hr {
+  border: 1px #ffffff solid;
+  margin: 0;
+  margin-left: -80px;
+  width: 180px;
 }
 
 #navbar button {

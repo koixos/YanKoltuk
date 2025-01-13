@@ -43,35 +43,37 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2 className="title">Giriş Yap</h2>
-      { error && <p className="error">{error}</p>}
-      <form className="login-form" onSubmit={handleSubmit}>
-        <div className="input-group">
-          <input
-            type="username"
-            placeholder="Kullanıcı Adı"
-            value={Username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="input"
-            required
-          />
-        </div>
-        <div className="input-group">
-          <input
-            type="password"
-            placeholder="Şifre"
-            value={Password}
-            onChange={(e) => setPasswd(e.target.value)}
-            className="input"
-            required
-          />
-        </div>
-        <div className="forgot-passwd">Şifremi Unuttum</div>
-        <button type="submit">
-          Giriş Yap
-        </button>
-      </form>
+    <div id="login">
+      <div className="login-container">
+        <h2 className="title">Giriş Yap</h2>
+        { error && <p className="error">{error}</p>}
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <input
+              type="username"
+              placeholder="Kullanıcı Adı"
+              value={Username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="input"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Şifre"
+              value={Password}
+              onChange={(e) => setPasswd(e.target.value)}
+              className="input"
+              required
+            />
+          </div>
+          <div className="forgot-passwd">Şifremi Unuttum</div>
+          <button type="submit">
+            Giriş Yap
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

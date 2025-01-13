@@ -1,18 +1,24 @@
+#login {
+    display: flex;
+    background-image: url('/public/photo.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
 .login-container {
-    background: #ffffff;
     border-radius: 10px;
-    padding: 30px;
+    border: 1px solid;
     width: 350px;
+    padding: 40px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 50px auto;
-    margin-top: 150px;
-    margin-bottom: 150px;
+    margin: 205px auto;
 }
 
 .title {
     color: #0077cc;
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
     margin-bottom: 40px;
 }
@@ -41,7 +47,7 @@
     box-sizing: border-box;
 }
 
-button {
+.login-form button {
     background: #0077cc;
     color: #ffffff;
     padding: 10px 15px;
@@ -51,11 +57,10 @@ button {
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    transition: background 0.3s;
 }
 
-.buttonHover {
-    background: #005fa3;
+.login-form button:Hover {
+    background: #3f51b5;
 }
 
 .forgot-passwd {
