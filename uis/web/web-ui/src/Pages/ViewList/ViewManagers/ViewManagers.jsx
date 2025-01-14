@@ -83,12 +83,12 @@ const ViewManagers = () => {
                                     onClick={() => handleManagerClick(item)}
                                 >
                                     <span> {index + 1}) {item.username} (ID: {item.managerId}) </span>
-                                        <button
-                                            className="delete-btn"
-                                            onClick={(e) => handleDelete(e)}
-                                        >
-                                            <i class="fa-regular fa-trash-can" />
-                                        </button>
+                                    <button
+                                        className="delete-btn"
+                                        onClick={(e) => handleDelete(e)}
+                                    >
+                                        <i class="fa-regular fa-trash-can" />
+                                    </button>
                                 </div>
                             )
                         )

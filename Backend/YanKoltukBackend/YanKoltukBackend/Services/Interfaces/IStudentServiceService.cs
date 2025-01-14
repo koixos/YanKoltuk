@@ -25,5 +25,6 @@ namespace YanKoltukBackend.Services.Interfaces
         Task<ServiceResult<StudentService>> SetExcludedDatesAsync(ExcludedDateDto excludedDateDto, int studentId);
         Task<ServiceResult<Student>> DeleteStudentAsync(int parentId, int studentId);
         Task<ServiceResult<StudentService>> DeleteStudentServiceAsync(int studentId);
+        Task<ServiceResult<byte[]>> GenerateServiceLogs(int serviceId);
     }
 }

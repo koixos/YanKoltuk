@@ -33,10 +33,10 @@ const Footer = () => {
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
                         <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                        distinctio earum repellat quaerat voluptatibus placeat nam,
-                        commodi optio pariatur est quia magnam eum harum corrupti
-                        dicta, aliquam sequi voluptate quas.
+                        Müşterilerimize en iyi hizmeti sunmayı hedefliyoruz.
+                        Bu uygulama, servis süreçlerinizi kolaylaştırmak, güncel bilgilerle donatmak ve size güvenilir bir takip deneyimi sunmak için geliştirildi.
+                        Tüm servis kayıtlarınız şeffaf bir şekilde elinizin altında. Herhangi bir sorun yaşarsanız, 7/24 destek ekibimizle iletişime geçebilirsiniz.
+                        Güveniniz için teşekkür ederiz!
                         </p>
                     </div>
                 </div>
@@ -65,8 +65,8 @@ const Footer = () => {
         </div>
 
         <div id='copyright' class="text-center p-3">
-            © 2024 Copyright:
-            <a class="text-white" href="https://mdbootstrap.com/">YanKoltuk.com</a>
+            © 2025 Copyright: 
+            <a class="text-white" href="https://mdbootstrap.com/">YanKoltuk.com.tr</a>
         </div>
     </footer>
   )

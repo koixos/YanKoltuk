@@ -31,7 +31,6 @@ builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IParentService, ParentService>();
 builder.Services.AddScoped<IStudentServiceService, StudentServiceService>();
-builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddAuthentication(options =>
 {

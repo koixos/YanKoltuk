@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
 using YanKoltukBackend.Models.DTOs.UpdateDTOs;
+using YanKoltukBackend.Models.Entities;
 using YanKoltukBackend.Services.Implementations;
 using YanKoltukBackend.Services.Interfaces;
 
@@ -67,6 +69,19 @@ namespace YanKoltukBackend.WebApi.Controllers
             int managerId = (await _managerService.GetManagerIdAsync()).Data;
             var result = await _managerService.DeleteServiceAsync(managerId, id);
             return result.Success ? NoContent() : BadRequest(result.Message);
+        }
+
+        [HttpGet("logs/{id}")]
+        public async Task<IActionResult> ExportServiceLogs(int id)
+        {
+            var fileContent = (await _studentServiceService.GenerateServiceLogs(id)).Data;
+            if (fileContent == null)
+            {
+                return NoContent();
+            }
+
+            var fileName = $"ServiceLogs_{id}.xlsx";
+            return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
     }
 }

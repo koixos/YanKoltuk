@@ -33,7 +33,6 @@ export const Navbar = () => {
       <div className="container">
         <i className="navbar-brand" onClick={handleClick}>
           <p className='logo'>YAN KOLTUK</p>
-          <hr />
         </i>
         {!isLoginPage && (
           <>

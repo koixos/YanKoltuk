@@ -140,6 +140,7 @@ class _DrivingListPageState extends State<DrivingListPage> {
 
     final response = await _serviceService.updateStatus(studentId!, updatedStudent);
     if (response) {
+      print(response);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Öğrenci durumu başarıyla güncellendi.")),
       );
@@ -280,7 +281,7 @@ class _DrivingListPageState extends State<DrivingListPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      'Not: $student.driverNote',
+                      'Not: ${student.driverNote}',
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
                         color: !_isAttending(student) ? Colors.grey : Colors.grey.shade700,

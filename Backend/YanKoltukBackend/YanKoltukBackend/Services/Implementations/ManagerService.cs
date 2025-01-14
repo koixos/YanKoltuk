@@ -44,7 +44,6 @@ namespace YanKoltukBackend.Services.Implementations
         public async Task<List<SendServiceDto>> GetAllServicesAsync(int managerId)
         {
             var services = await _serviceRepo.FindAsync(s => s.ManagerId == managerId);
-
             return services.Select(s => new SendServiceDto
             {
                 ServiceId = s.ServiceId,
@@ -57,13 +56,16 @@ namespace YanKoltukBackend.Services.Implementations
                 DriverPhone = s.DriverPhone,
                 StewardessIdNo = s.StewardessIdNo,
                 StewardessName = s.StewardessName,
-                StewardessPhone = s.StewardessPhone
+                StewardessPhone = s.StewardessPhone,
             }).ToList();
         }
 
         public async Task<Service?> GetServiceByIdAsync(int managerId, int serviceId)
         {
-            return (await _serviceRepo.FindAsync(s => (s.ManagerId == managerId) && (s.ServiceId == serviceId))).FirstOrDefault();
+            return (await _serviceRepo.FindAsync(
+                s => (s.ManagerId == managerId) && (s.ServiceId == serviceId),
+                include: s => s.Include(x => x.StudentServices)
+                                .ThenInclude(ss => ss.Student))).FirstOrDefault();
         }
 
         public async Task<ServiceResult<Service>> AddServiceAsync(ServiceDto serviceDto, int managerId)

@@ -9,9 +9,15 @@ const ViewServices = () => {
     const [services, setServices] = useState([]);
     const navigate = useNavigate();
 
-    const handleServiceClick = (service) => {
-        setSelectedService(service);
-        navigate(`/view-services/${service.serviceId}`);
+    const handleServiceClick = async (service) => {
+        try {
+            const response = await axiosInstance.get(`/manager/${service.serviceId}`);
+            setSelectedService(response.data || []);
+            navigate(`/view-services/${service.serviceId}`);
+        } catch (err) {
+            console.error("Could not load services: ", err);
+            setSelectedService([]);
+        }
     };
 
     const handleBack = () => {

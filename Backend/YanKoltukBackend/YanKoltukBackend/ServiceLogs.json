@@ -1,0 +1,122 @@
+[
+  {
+    "ServiceLogId": 1,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:07:38",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 2,
+    "Date": "2025-01-11",
+    "PickupTime": "22:07:40",
+    "DropOffTime": "00:00:00",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 3,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:08:14",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 4,
+    "Date": "2025-01-11",
+    "PickupTime": "22:08:25",
+    "DropOffTime": "00:00:00",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 5,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:08:41",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 6,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:08:47",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 7,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:06",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 8,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:07",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 9,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:07",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 2
+  },
+  {
+    "ServiceLogId": 10,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:09",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 11,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:10",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 2
+  },
+  {
+    "ServiceLogId": 12,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:10",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 1
+  },
+  {
+    "ServiceLogId": 13,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:10:11",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 2
+  },
+  {
+    "ServiceLogId": 14,
+    "Date": "2025-01-11",
+    "PickupTime": "22:11:21",
+    "DropOffTime": "00:00:00",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 2
+  },
+  {
+    "ServiceLogId": 15,
+    "Date": "2025-01-11",
+    "PickupTime": null,
+    "DropOffTime": "22:11:36",
+    "Direction": "Okula Gidi\u015F",
+    "StudentServiceId": 2
+  }
+]

@@ -1,12 +1,34 @@
 #login {
     display: flex;
-    background-image: url('/public/photo.jpg');
+    min-height: 100%;
+    width: 100%;
+    background-image: url('/public/photo2.png');
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+    background-size: cover;
+    position: relative;
 }
 
+/* Blur efekti için overlay */
+#login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    background-attachment: fixed;
+    filter: blur(8px); /* Blur miktarını buradan ayarlayabilirsiniz */
+    z-index: 0;
+}
+
+/* Login container'ın blur'dan etkilenmemesi için */
 .login-container {
+    position: relative;
+    z-index: 1;
+    background: white; /* Arka planın görünmemesi için */
     border-radius: 10px;
     border: 1px solid;
     width: 350px;
@@ -17,7 +39,7 @@
 }
 
 .title {
-    color: #0077cc;
+    color: #cb8f0c;
     font-size: 32px;
     font-weight: bold;
     margin-bottom: 40px;
@@ -41,14 +63,14 @@
 .input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #0077cc;
+    border: 1px solid #cb8f0c;;
     border-radius: 5px;
     font-size: 14px;
     box-sizing: border-box;
 }
 
 .login-form button {
-    background: #0077cc;
+    background: #cb8f0c;
     color: #ffffff;
     padding: 10px 15px;
     border: none;
@@ -60,11 +82,11 @@
 }
 
 .login-form button:Hover {
-    background: #3f51b5;
+    background: #eaa70a;;
 }
 
 .forgot-passwd {
-    color: #0077cc;
+    color: #cb8f0c;
     font-size: 12px;
     text-align: right;
     cursor: pointer;

@@ -30,7 +30,6 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _startDate;
   DateTime? _endDate;
   DateTime _focusedDay = DateTime.now();
-  String _statusMessage = "Başlangıç tarihi seçiniz:";
   bool _showActionButtons = false;
 
   @override
@@ -56,7 +55,7 @@ class _CalendarPageState extends State<CalendarPage> {
     final response = await _parentService.setExcludedDates(excludedDates, studentId!);
     if (response) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Başarıyla izin alındı.")),
+        const SnackBar(content: Text("Öğrenci izin durumu başarıyla güncellendi.")),
       );
 
       Future.delayed(const Duration(seconds: 2), () {
@@ -73,7 +72,6 @@ class _CalendarPageState extends State<CalendarPage> {
     setState(() {
       _startDate = null;
       _endDate = null;
-      _statusMessage = "Başlangıç tarihi seçiniz:";
       _showActionButtons = false;
     });
   }
@@ -137,19 +135,6 @@ class _CalendarPageState extends State<CalendarPage> {
               onPressed: () {
                 _handleSubmit(startDate, endDate, widget.studentId);
                 Navigator.pop(context);
-                /*setState(() {
-                  _markedDays.removeWhere((day) => !day.isBefore(selectedDay) || isSameDay(day, selectedDay));
-
-                  if (_markedDays.isNotEmpty) {
-                    widget.excludedStartDate = _markedDays.reduce((a, b) => a.isBefore(b) ? a : b);
-                    widget.excludedEndDate = _markedDays.reduce((a, b) => a.isAfter(b) ? a : b);
-                  } else {
-                    widget.excludedStartDate = null;
-                    widget.excludedEndDate = null;
-                  }
-
-                  _resetSelection();
-                });*/
               },
               child: Text("Evet"),
             ),
@@ -258,13 +243,11 @@ class _CalendarPageState extends State<CalendarPage> {
                       );
                     } else {
                       _endDate = selectedDay;
-                      _statusMessage = "Başlangıç ve bitiş tarihleri seçildi.";
                       _showActionButtons = true;
                     }
                   } else if (_startDate == null || (_startDate != null && _endDate != null)) {
                     _startDate = selectedDay;
                     _endDate = null;
-                    _statusMessage = "Bitiş tarihi seçiniz:";
                     _showActionButtons = false;
                   }
                 });
@@ -301,7 +284,6 @@ class _CalendarPageState extends State<CalendarPage> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _statusMessage = "Başlangıç tarihi seçiniz:";
                           _startDate = null;
                         });
                       },
@@ -314,7 +296,6 @@ class _CalendarPageState extends State<CalendarPage> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _statusMessage = "Bitiş tarihi seçiniz:";
                           _endDate = null;
                         });
                       },

@@ -3,19 +3,25 @@
     display: flex;
     margin: 75px auto;
     font-family: 'Rubik', sans-serif;
+    height: 640px;
 }
 
-#servicedetail-container .back-btn {
-    top: 45px;
-    padding-top: 30px;
-    justify-content: center;
-    position: absolute;
-    border: none ;
-    background: #fff;
-    border-radius: 5px ;
-    cursor: pointer ;
-    color: gray;
-    z-index: 1;
+.custom-back-btn {
+    position: absolute !important;
+    transform: scale(1.4);
+    right: 60px !important;  /* Sağa almak için */
+    top: 70px !important;
+    padding: 8px 12px !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    color: gray !important;
+    z-index: 10 !important;
+    transition: all 0.3s ease !important;
+}
+
+.custom-back-btn:hover {
+    color: #cb8f0c !important;
 }
 
 #servicedetail-details {
@@ -26,7 +32,7 @@
     width: 100%;
     background: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-top: 10px solid #3f51b5;
+    border-top: 10px solid #cb8f0c;
 }
 
 #servicedetail-items-head {
@@ -37,7 +43,7 @@
 }
 
 #servicedetail-items-head p {
-    color: #3f51b5;
+    color: #cb8f0c;
     font-weight: bold;
     font-size: 30px;
 }
@@ -49,11 +55,11 @@
 .btn-group {
     position: absolute;
     top: 10px;
-    left: 58vh;
+    left: 67vh;
 }
 
 .btn-group button {
-    background-color: #3f51b5;
+    background-color: #cb8f0c;
     color: #fff;
     border: none;
     margin: 5px;
@@ -64,20 +70,8 @@
 }
 
 .btn-group button:hover {
-    background-color: #1d39c4;
+    background-color: #e6c20d;
 }
-
-/*#servicedetail-students {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 13px;
-    background: #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    border-top: 10px solid #3f51b5;
-    height: 66vh;
-    max-width: 50%;
-}*/
 
 #servicedetail-items-body {
     display: flex;
@@ -92,36 +86,30 @@
     font-size: 16px;
 }
 
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.col-sm-9 {
+    color: #888;
+    padding: 0;
+    margin-bottom: 5px;
+    margin-top: -5px;
 }
 
-.popup-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+.warning {
+    border: 1px solid transparent;
+    cursor: default;
+    color: gray;
+    margin-left: 24px;
 }
 
 input[type="text"] {
     width: auto;
     padding: 5px 10px;
-    margin: 3px 0;
-    box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 14px;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 0;
+    margin-bottom: 3px;
 }
 
 input[type="text"]:hover {
@@ -163,6 +151,12 @@ button.delete-btn:hover {
         right: 0;
         align-self: center;
     }
+
+    .custom-back-btn {
+        right: 50px !important;
+        top: 70px !important;
+        transform: scale(1.2);
+    }
 }
 
 @media (max-width: 768px) {
@@ -175,5 +169,11 @@ button.delete-btn:hover {
         width: 100%;
         font-size: 14px;
         padding: 8px 16px;
+    }
+
+    .custom-back-btn {
+        right: -290px !important;
+        top: 80px !important;
+        transform: scale(1);
     }
 }

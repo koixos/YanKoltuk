@@ -1,4 +1,6 @@
-﻿namespace YanKoltukBackend.Models.DTOs.SendDTOs
+﻿using YanKoltukBackend.Models.Entities;
+
+namespace YanKoltukBackend.Models.DTOs.SendDTOs
 {
     public class SendServiceDto
     {

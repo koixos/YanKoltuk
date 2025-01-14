@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using YanKoltukBackend.Application.Results;
 using YanKoltukBackend.Hubs;
 using YanKoltukBackend.Models.DTOs.AddDTOs;
@@ -439,6 +440,64 @@ namespace YanKoltukBackend.Services.Implementations
 
             await _studentServiceRepo.DeleteAsync(studentService);
             return ServiceResult<StudentService>.SuccessResult(studentService);
+        }
+
+        public async Task<ServiceResult<byte[]>> GenerateServiceLogs(int serviceId)
+        {
+            var service = await _serviceRepo.GetByIdAsync(serviceId);
+            var studentServices = (await _studentServiceRepo.FindAsync(ss => ss.ServiceId == serviceId)).ToList();
+            
+            var serviceLogs = new List<ServiceLog>();
+
+            foreach (var studentService in studentServices)
+            {
+                var logs = await _serviceLogRepo.FindAsync(
+                    sl => sl.StudentServiceId == studentService.StudentServiceId,
+                    include: sl => sl.Include(x => x.StudentService)
+                                     .ThenInclude(ss => ss.Student));
+                serviceLogs.AddRange(logs);
+            }
+
+            var groupedLogs = serviceLogs.GroupBy(log => log.Date.Value.Date);
+
+            using var package = new ExcelPackage();
+
+            foreach (var group in groupedLogs)
+            {
+                var date = group.Key.ToString("dd-MM-yyyy");
+                var toSchoolLogs = group.Where(log => log.Direction == "Okula Gidiş").ToList();
+                var fromSchoolLogs = group.Where(log => log.Direction == "Okuldan Dönüş").ToList();
+
+                var toSchoolSheet = package.Workbook.Worksheets.Add($"Okula Gidiş - {date}");
+                var fromSchoolSheet = package.Workbook.Worksheets.Add($"Okuldan Dönüş - {date}");
+
+                PopulateSheet(toSchoolSheet, toSchoolLogs);
+                PopulateSheet(fromSchoolSheet, fromSchoolLogs);
+
+                toSchoolSheet.Cells["A1"].Value = $"Servis Plaka: {service.Plate}, Yön: Okula Gidiş, Tarih: {date}";
+                fromSchoolSheet.Cells["A1"].Value = $"Servis Plaka: {service.Plate}, Yön: Okuldan Dönüş, Tarih: {date}";
+            }
+
+            var fileContent = package.GetAsByteArray();
+            return ServiceResult<byte[]>.SuccessResult(fileContent);
+        }
+
+        private static void PopulateSheet(ExcelWorksheet sheet, List<ServiceLog> logs)
+        {
+            sheet.Cells["A2"].Value = "Ad/Soyad";
+            sheet.Cells["B2"].Value = "Okul No";
+            sheet.Cells["C2"].Value = "Servise Bindi";
+            sheet.Cells["D2"].Value = "Servisten İndi";
+
+            int row = 3;
+            foreach (var log in logs)
+            {
+                sheet.Cells[row, 1].Value = log.StudentService?.Student?.Name ?? "N/A";
+                sheet.Cells[row, 2].Value = log.StudentService?.Student?.SchoolNo ?? "N/A";
+                sheet.Cells[row, 3].Value = log.PickupTime.HasValue ? log.PickupTime.Value.ToString(@"hh\:mm\:ss") : string.Empty;
+                sheet.Cells[row, 4].Value = log.DropOffTime.ToString(@"hh\:mm\:ss");
+                row++;
+            }
         }
     }
 }

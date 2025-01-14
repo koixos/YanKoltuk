@@ -22,7 +22,7 @@
     background: white;
     padding: 100px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-top: 10px solid #3f51b5;
+    border-top: 10px solid #cb8f0c;
 }
 
 #back-btn {
@@ -86,7 +86,7 @@
 }
 
 #add-manager-container button.submit {
-    background-color: #0168b1;
+    background-color: #cb8f0c;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
@@ -97,5 +97,5 @@
 }
 
 #add-manager-container button.submit:hover {
-    background-color: #4e1cd9;
+    background-color: #cb8f0c;
 }

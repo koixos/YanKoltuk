@@ -8,7 +8,7 @@ function ServiceDetail({ service, onEdit }) {
     const [showPopup, setShowPopup] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [updatedService, setUpdatedService] = useState(service);
-    const [students, setStudents] = useState();
+    const [students, setStudents] = useState([]);
 
     const navigate = useNavigate();
 
@@ -82,22 +82,15 @@ function ServiceDetail({ service, onEdit }) {
     };
 
     useEffect(() => {
-        const fetchStudentsAsync = async () => {
-            try {
-                const response = await axiosInstance.get(`/manager/students/${service.serviceId}`);
-                setStudents(response.data.$values || []);
-                console.log(response.data)
-            } catch (err) {
-                console.error("Could not load services: ", err);
-                setStudents([]);
-            }
-        };
-        fetchStudentsAsync();
-    }, []);
+        if (service.studentServices && Array.isArray(service.studentServices.$values)) {
+            setStudents(service.studentServices.$values.map(ss => ss.student) || []);
+        }        
+    }, [service]);
+
 
     return (
         <div className="container" id="servicedetail-container">
-            <button id='back-btn' className="btn btn-secondary" onClick={() => navigate(-1)}>
+            <button className='custom-back-btn' onClick={() => navigate(-1)}>
                 <i class="fa-solid fa-xmark fa-lg"/>
             </button>
             <div className="items" id="servicedetail-details">
@@ -122,18 +115,18 @@ function ServiceDetail({ service, onEdit }) {
                     </div>
                     <div className="items-body-content" id="servicedetail-items-body-content">
                         <div className="row">
-                            <div className="col-sm-3"><h6 className="mb-0">Servis ID:</h6></div>
-                            <div className="col-sm-9 text-secondary"> {service.serviceId} </div>
+                            <div className="col-sm-3"><h6 className="mb-0">Servis No</h6></div>
+                            <div className="col-sm-9"> {service.serviceId} </div>
                             <hr />
                         </div>
                         <div className="row">
-                            <div className="col-sm-3"><h6 className="mb-0">Plaka:</h6></div>
-                            <div className="col-sm-9 text-secondary"> {service.plate} </div>
+                            <div className="col-sm-3"><h6 className="mb-0">Plaka</h6></div>
+                            <div className="col-sm-9"> {service.plate} </div>
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Sürücü T.C. :</h6></div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-3"><h6 class="mb-0">Şoför T.C.</h6></div>
+                            <div class="col-sm-9">
                                 {isEditing ? (
                                     <input
                                         type="text"
@@ -148,8 +141,8 @@ function ServiceDetail({ service, onEdit }) {
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Sürücü Adı:</h6></div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-3"><h6 class="mb-0">Şoför</h6></div>
+                            <div class="col-sm-9">
                                 {isEditing ? (
                                     <input
                                         type="text"
@@ -164,8 +157,8 @@ function ServiceDetail({ service, onEdit }) {
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Sürücü Telefon:</h6></div>
-                            <div class="col-sm-9 text-secondary"> 
+                            <div class="col-sm-3"><h6 class="mb-0">Şoför Telefon</h6></div>
+                            <div class="col-sm-9"> 
 								{isEditing ? (
                                     <input
                                         type="text"
@@ -180,8 +173,8 @@ function ServiceDetail({ service, onEdit }) {
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Hostes T.C. :</h6></div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-3"><h6 class="mb-0">Hostes T.C.</h6></div>
+                            <div class="col-sm-9">
 								{isEditing ? (
                                     <input
                                         type="text"
@@ -196,8 +189,8 @@ function ServiceDetail({ service, onEdit }) {
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Hostes Adı:</h6></div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-3"><h6 class="mb-0">Hostes</h6></div>
+                            <div class="col-sm-9">
 								{isEditing ? (
                                     <input
                                         type="text"
@@ -212,8 +205,8 @@ function ServiceDetail({ service, onEdit }) {
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Hostes Telefon:</h6></div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-3"><h6 class="mb-0">Hostes Telefon</h6></div>
+                            <div class="col-sm-9">
 								{isEditing ? (
                                     <input
                                         type="text"
@@ -228,18 +221,18 @@ function ServiceDetail({ service, onEdit }) {
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Kapasite:</h6></div>
-                            <div class="col-sm-9 text-secondary"> {service.capacity} </div>
+                            <div class="col-sm-3"><h6 class="mb-0">Kapasite</h6></div>
+                            <div class="col-sm-9"> {service.capacity} </div>
                             <hr />
                         </div>
                         <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Kalkış Saati:</h6></div>
-                            <div class="col-sm-9 text-secondary"> {service.departureTime} </div>
+                            <div class="col-sm-3"><h6 class="mb-0">Kalkış Saati</h6></div>
+                            <div class="col-sm-9"> {service.departureTime} </div>
                             <hr />
                         </div>
                         <div className="row">
-                            <div className="col-sm-3"><h6 className="mb-0">Kalkış Noktası:</h6></div>
-                            <div className="col-sm-9 text-secondary"> {service.departureLocation} </div>
+                            <div className="col-sm-3"><h6 className="mb-0">Kalkış Noktası</h6></div>
+                            <div className="col-sm-9"> {service.departureLocation} </div>
                         </div>
                     </div>
                 </div>
@@ -248,19 +241,19 @@ function ServiceDetail({ service, onEdit }) {
                         <p>Kayıtlı Öğrenciler</p>
                         <hr />
                     </div>
-                    {service.students && service.students.length > 0 ? (
-                        service.students.map((student, i) => (
+                    {students && students.length > 0 ? (
+                        students.map((student, i) => (
                             <div 
-                                key={i}
+                                key={student.studentId}
                                 className="items-body-content"
                                 id="servicedetail-items-body-content"
                             >
-                                <span> {student.schoolNo} - {student.name} </span>
+                                <span>{i + 1}) {student.schoolNo} - {student.name} </span>
                                 <hr />
                             </div>
                         ))
                     ) : (
-                        <p>Kayıtlı öğrenci bulunamadı.</p>
+                        <p className="warning">Kayıtlı öğrenci bulunamadı.</p>
                     )}
                 </div>
             </div>

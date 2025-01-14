@@ -49,7 +49,7 @@
 }
 
 .card:hover {
-    border-color: #1d39c4;
+    border-color: #cb8f0c;
 }
 
 .description {
@@ -59,7 +59,7 @@
 .btn {
     border: none;
     outline: none;
-    background: #1d39c4;
+    background: #cb8f0c;
     color: #fff;
     border-radius: 10px;
     max-width: 120px;
@@ -71,11 +71,11 @@
     margin-top: 15px;
     cursor: pointer;
     transition: .3s;
-    border: 1px solid #1d39c4;
+    border: 1px solid #ab7709;
 }
 
 .btn:hover {
-    background: #265df2;
+    background: #ffe30f;
     color: #fff;
 }
 
