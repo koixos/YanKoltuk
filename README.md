@@ -49,9 +49,9 @@ flutter run
 ```
 
 ## 📽️ Demo
-Check out the YouTube demo videos to see how Yan Koltuk works on mobile and web. Please note that these are not the final version of the project.
+Check out the YouTube demo videos to see how Yan Koltuk works on mobile and web. Please note that these are not the final version of the project. (These demos do not include the latest version of the project)
 - [Demo video for web](https://youtu.be/wrKYUZhz1eA?si=zj4rhCeTbwYyhzoM)
-- [Demo video fpr mobile](https://youtu.be/1U0kIp4myMY?si=6Yz_3b7U9S8m3GHb)
+- [Demo video for mobile](https://youtu.be/1U0kIp4myMY?si=6Yz_3b7U9S8m3GHb)
 
 ## 📜 License
 This project is licensed under the MIT License.
